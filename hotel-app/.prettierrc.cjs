@@ -5,7 +5,7 @@ module.exports = {
   // 使用 2 个空格缩进
   tabWidth: 2,
   // 不使用缩进符，而使用空格
-  useTabs: false,
+  useTabs: true,
   // 行尾分号
   semi: false,
   // 使用单引号
