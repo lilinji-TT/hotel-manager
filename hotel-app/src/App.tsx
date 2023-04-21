@@ -4,13 +4,9 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 //测试是否会报错
 console.log(viteLogo)
-const a = 1
+   const a = 1
 const b = 1
 const c = 1
-const d = 1
-const e = 1
-const f = 1
-const g = 1
 function App() {
 	const [count, setCount] = useState(0)
 	return (
