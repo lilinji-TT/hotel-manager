@@ -1,3 +1,5 @@
+/*eslint no-undef: "error"*/
+/*eslint-env node*/
 module.exports = {
 	env: { browser: true, es2020: true },
 	extends: [
@@ -5,19 +7,20 @@ module.exports = {
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react-hooks/recommended',
 		'plugin:prettier/recommended',
-		'prettier',
+		'prettier'
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		ecmaFeatures: {
-			jsx: true,
+			jsx: true
 		},
 		ecmaVersion: 'latest',
-		sourceType: 'module',
+		sourceType: 'module'
 	},
 	plugins: ['react-refresh', '@typescript-eslint', 'prettier'],
 	rules: {
 		'react-refresh/only-export-components': 'warn',
 		'no-console': 'error',
-	},
+		'no-unused-vars': 'off'
+	}
 }
