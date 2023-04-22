@@ -1,10 +1,10 @@
-import React, { useReducer, ReactNode } from 'react'
-import { Role, UserWithAuth } from '../domin/user.ts'
+import React, { useReducer, ReactNode, createContext } from 'react'
+import { Role, UserWithAuth } from '../domin/User.ts'
 const defaultUserState: UserWithAuth = {
 	_id: '',
 	userName: '',
 	realName: '',
-	role: Role.User,
+	role: Role.REGULAR,
 	isAuthenticated: false
 }
 
@@ -22,9 +22,11 @@ const userLogin = (state: User, action) => {
 	return { ...state, userName: action.userName, isAuthenticated: true }
 }
 
-export const UserContext = createContext(null)
+export const UserContext = createContext({})
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
+const UserProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
 	const [userState, userDispatch] = useReducer(userReducer, defaultUserState)
 	return <UserContext.Provider value={{ userState, userDispatch }}>{children}</UserContext.Provider>
 }
+
+export default UserProvider

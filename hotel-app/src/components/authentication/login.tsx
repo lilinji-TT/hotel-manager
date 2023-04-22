@@ -5,9 +5,8 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false)
 
-	const onFinish = (values: any) => {
+	const onFinish = () => {
 		setLoading(true)
-		console.log('Received values of form: ', values)
 		// 在这里处理登录请求
 		setTimeout(() => {
 			setLoading(false)
