@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from 'axios'
 
 const service = axios.create({
-	baseURL: 'http://localhost:3002',
+	baseURL: 'http://localhost:3010',
 	timeout: !isNaN(5000) ? Number(5000) : 60 * 1000
 })
 
