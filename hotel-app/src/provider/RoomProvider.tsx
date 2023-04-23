@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useReducer } from 'react'
-import { Room, RoomType, RoomStatus } from '../domin/Room.ts'
+import { Room, RoomStatus, RoomType } from '../domin/Room.ts'
+import { ss } from '../utils/storage/index.ts'
 const defaultRoomState: Room[] = [
 	{
 		_id: '',
@@ -12,8 +13,10 @@ const defaultRoomState: Room[] = [
 
 const roomReducer = (state = defaultRoomState, action) => {
 	switch (action.type) {
-		case '':
-			return
+		case 'GET_ROOM_STATE':
+			return ss.get('ROOM_STATE')
+		case 'SET_ROOM_STATE':
+			return ss.set('ROOM_STATE', state)
 		default:
 			return state
 	}
