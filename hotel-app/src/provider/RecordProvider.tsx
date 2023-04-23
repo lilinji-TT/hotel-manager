@@ -9,7 +9,7 @@ const defaultRecordState: Record[] = [
 		number: '',
 		customName: '',
 		idCard: '',
-		phone: 0,
+		phone: '188678467314',
 		checkInDate: new Date(''),
 		checkOutDate: new Date(''),
 		fee: 0,

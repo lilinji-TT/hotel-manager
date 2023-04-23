@@ -5,8 +5,7 @@ export enum RecordStatus {
 	PROCESSING = 'PROCESSING',
 	COMPLETED = 'COMPLETED'
 }
-
-export interface record extends Omit<Room, '_id' | 'status' | 'price'>, Entity {
+export interface Record extends Omit<Room, '_id' | 'status' | 'price'>, Entity {
 	roomId: Id
 	customName: string
 	idCard: string
