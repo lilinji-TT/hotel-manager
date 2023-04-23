@@ -6,7 +6,8 @@ import DashBoardPage from './components/dashBoard/dashboard'
 import { UserContext } from './provider/UserProvider'
 
 const App: React.FC = (): ReactElement => {
-	const { userState } = useContext(UserContext)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const { userState } = useContext(UserContext) as any
 	const unauthorizedRoutes = (
 		<Routes>
 			<Route path='/login' element={<LoginPage />} />
