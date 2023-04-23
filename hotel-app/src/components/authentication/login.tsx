@@ -9,8 +9,7 @@ const Login: React.FC = () => {
 	const [userName, setUserName] = useState<string>('')
 	const [passWord, setPassWord] = useState<string>('')
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const { userDispatch } = useContext(UserContext) as any
+	const { userDispatch } = useContext(UserContext)
 	const onFinish = async () => {
 		setLoading(true)
 		// 在这里处理登录请求

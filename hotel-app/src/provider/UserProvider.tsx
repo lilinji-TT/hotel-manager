@@ -1,9 +1,14 @@
 import { ReactNode, createContext, useCallback, useMemo, useReducer } from 'react'
-import { Role, UserWithAuth } from '../domin/User.ts'
+import { Role, User, UserWithAuth } from '../domin/User.ts'
 import { ss } from '../utils/storage/index.ts'
 import { userActions } from './actions/useUserAction.ts'
 
-const USER_STATE = {
+export interface USERSTORE {
+	userState: UserWithAuth
+	userDispatch: React.Dispatch<{ type: string } | User>
+}
+
+const USER_STATE: UserWithAuth = {
 	_id: '',
 	userName: '',
 	realName: '',
@@ -11,7 +16,7 @@ const USER_STATE = {
 	isAuthenticated: false
 }
 
-export const UserContext = createContext({})
+export const UserContext = createContext<USERSTORE>({} as USERSTORE)
 
 const UserProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
 	const defaultUserState: UserWithAuth = ss.get('USER_STATE') || USER_STATE
