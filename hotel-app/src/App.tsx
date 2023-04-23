@@ -1,9 +1,9 @@
-import React, { ReactElement, useContext } from 'react'
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
-import { UserContext } from './provider/UserProvider'
 import 'bootstrap/dist/css/bootstrap.css'
-import DashBoardPage from './components/dashBoard/dashboard'
+import React, { ReactElement, useContext } from 'react'
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import LoginPage from './components/authentication/login'
+import DashBoardPage from './components/dashBoard/dashboard'
+import { UserContext } from './provider/UserProvider'
 
 const App: React.FC = (): ReactElement => {
 	const { userState } = useContext(UserContext)
