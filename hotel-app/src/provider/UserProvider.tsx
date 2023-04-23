@@ -1,5 +1,5 @@
-import React, { useReducer, ReactNode, createContext } from 'react'
-import { Role, UserWithAuth } from '../domin/User.ts'
+import { ReactNode, createContext, useReducer } from 'react'
+import { Role, User, UserWithAuth } from '../domin/User.ts'
 const defaultUserState: UserWithAuth = {
 	_id: '',
 	userName: '',
@@ -12,7 +12,6 @@ const userReducer = (state = defaultUserState, action = {}) => {
 	switch (action.type) {
 		case 'userLogin':
 			return userLogin(state, action)
-			break
 		default:
 			return state
 	}
