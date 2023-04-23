@@ -12,17 +12,22 @@ export interface Response<T = unknown> {
 	data: T
 	message: string | null
 	status: string
+	response: {
+		data: {
+			status: string
+			message: string | null
+		}
+	}
 }
 
 function http<T = unknown>({ url, data, method }: HttpOption) {
 	const successHandler = (res: AxiosResponse<Response<T>>) => {
-		if (res.data.status === 'Success') return res.data
-
+		if (res.data?.status === 'Success') return res.data
 		return Promise.reject(res.data)
 	}
 
 	const failHandler = (error: Response<Error>) => {
-		throw new Error(error?.data.message || '对不起，出现了一点小错误~')
+		throw new Error(error.response?.data.message || '对不起，出现了一点小错误~')
 	}
 
 	method = method || 'GET'

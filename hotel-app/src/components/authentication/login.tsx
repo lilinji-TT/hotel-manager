@@ -1,16 +1,28 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import React, { useState } from 'react'
+import { login } from '../../api'
 
 const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false)
+	const [userName, setUserName] = useState<string>('')
+	const [passWord, setPassWord] = useState<string>('')
 
-	const onFinish = () => {
+	const onFinish = async () => {
 		setLoading(true)
 		// 在这里处理登录请求
-		setTimeout(() => {
+		try {
+			const res = await login({ userName, passWord })
+			await new Promise((resolve) => setTimeout(resolve, 1000))
+			if (res.status === 'Success') {
+				setLoading(false)
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (err: any) {
+			await new Promise((resolve) => setTimeout(resolve, 2000))
+			alert(err.message)
 			setLoading(false)
-		}, 2000)
+		}
 	}
 
 	return (
@@ -29,10 +41,21 @@ const Login: React.FC = () => {
 						<h1>登录</h1>
 					</Form.Item>
 					<Form.Item name='username' rules={[{ required: true, message: 'Please input your Username!' }]}>
-						<Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Username' />
+						<Input
+							prefix={<UserOutlined className='site-form-item-icon' />}
+							placeholder='Username'
+							value={userName}
+							onChange={(e) => setUserName(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item name='password' rules={[{ required: true, message: 'Please input your Password!' }]}>
-						<Input prefix={<LockOutlined className='site-form-item-icon' />} type='password' placeholder='Password' />
+						<Input
+							prefix={<LockOutlined className='site-form-item-icon' />}
+							type='password'
+							placeholder='Password'
+							value={passWord}
+							onChange={(e) => setPassWord(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item>
 						<Form.Item name='remember' valuePropName='checked' noStyle>
