@@ -18,7 +18,7 @@ const defaultRecordState: Record[] = [
 	}
 ]
 
-const recordReducer = (state = defaultRecordState, action = {}) => {
+const recordReducer = (state = defaultRecordState, action) => {
 	switch (action.type) {
 		case '':
 			return

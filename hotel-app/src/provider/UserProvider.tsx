@@ -8,7 +8,7 @@ const defaultUserState: UserWithAuth = {
 	isAuthenticated: false
 }
 
-const userReducer = (state = defaultUserState, action = {}) => {
+const userReducer = (state: UserWithAuth = defaultUserState, action) => {
 	switch (action.type) {
 		case 'userLogin':
 			return userLogin(state, action)

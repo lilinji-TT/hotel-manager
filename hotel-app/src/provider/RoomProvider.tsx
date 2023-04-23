@@ -10,7 +10,7 @@ const defaultRoomState: Room[] = [
 	}
 ]
 
-const roomReducer = (state = defaultRoomState, action = {}) => {
+const roomReducer = (state = defaultRoomState, action) => {
 	switch (action.type) {
 		case '':
 			return
