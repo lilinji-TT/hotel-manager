@@ -1,6 +1,12 @@
 import { ReactNode, createContext, useReducer } from 'react'
 import { Room, RoomStatus, RoomType } from '../domin/Room.ts'
 import { ss } from '../utils/storage/index.ts'
+
+export interface ROOM_STATE {
+	roomState: RoomStatus[]
+
+	roomDispatch: React.Dispatch<{ type: string } | RoomStatus>
+}
 const defaultRoomState: Room[] = [
 	{
 		_id: '',
@@ -22,7 +28,7 @@ const roomReducer = (state = defaultRoomState, action) => {
 	}
 }
 
-export const RoomContext = createContext({})
+export const RoomContext = createContext<ROOM_STATE>({} as ROOM_STATE)
 
 const RoomProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
 	const [roomState, roomDispatch] = useReducer(roomReducer, defaultRoomState)

@@ -1,6 +1,12 @@
 import { ReactNode, createContext, useReducer } from 'react'
 import { Record, RecordStatus } from '../domin/Record.ts'
 import { RoomType } from '../domin/Room.ts'
+
+export interface RECORD_STATE {
+	recordState: Record[]
+
+	recordDispatch: React.Dispatch<{ type: string } | Record>
+}
 const defaultRecordState: Record[] = [
 	{
 		_id: '',
@@ -21,13 +27,13 @@ const defaultRecordState: Record[] = [
 const recordReducer = (state = defaultRecordState, action) => {
 	switch (action.type) {
 		case '':
-			return
+			return state
 		default:
 			return state
 	}
 }
 
-export const RecordContext = createContext({})
+export const RecordContext = createContext<RECORD_STATE>({} as RECORD_STATE)
 
 const RecordProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
 	const [recordState, recordDispatch] = useReducer(recordReducer, defaultRecordState)

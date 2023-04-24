@@ -3,7 +3,7 @@ import { Role, User, UserWithAuth } from '../domin/User.ts'
 import { ss } from '../utils/storage/index.ts'
 import { userActions } from './actions/useUserAction.ts'
 
-export interface USERSTORE {
+export interface USER_STATE {
 	userState: UserWithAuth
 	userDispatch: React.Dispatch<{ type: string } | User>
 }
@@ -16,7 +16,7 @@ const USER_STATE: UserWithAuth = {
 	isAuthenticated: false
 }
 
-export const UserContext = createContext<USERSTORE>({} as USERSTORE)
+export const UserContext = createContext<USER_STATE>({} as USER_STATE)
 
 const UserProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
 	const defaultUserState: UserWithAuth = ss.get('USER_STATE') || USER_STATE
