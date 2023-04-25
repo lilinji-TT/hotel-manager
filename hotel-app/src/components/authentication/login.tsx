@@ -165,7 +165,7 @@ export default function SignInSide() {
 				onClose={handleClose}
 				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 			>
-				<Alert elevation={6} variant='filled' onClose={() => handleClose('clickaway')} severity='error'>
+				<Alert elevation={6} variant='filled' severity='error'>
 					账号或者密码错误
 				</Alert>
 			</Snackbar>
