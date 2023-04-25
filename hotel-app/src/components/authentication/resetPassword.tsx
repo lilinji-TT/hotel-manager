@@ -1,4 +1,4 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import LockResetIcon from '@mui/icons-material/LockReset'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -53,10 +53,10 @@ export default function SignUp() {
 					}}
 				>
 					<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-						<LockOutlinedIcon />
+						<LockResetIcon />
 					</Avatar>
-					<Typography component='h1' variant='h5'>
-						Sign up
+					<Typography component='h1' variant='h6'>
+						Reset Password
 					</Typography>
 					<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 						<Grid container spacing={2}>
@@ -91,7 +91,7 @@ export default function SignUp() {
 								/>
 							</Grid>
 						</Grid>
-						<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+						<Button type='reset' fullWidth variant='outlined' sx={{ mt: 3, mb: 2 }}>
 							Reset Password
 						</Button>
 						<Grid container justifyContent='flex-end'>
