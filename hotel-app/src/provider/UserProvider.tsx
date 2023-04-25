@@ -1,6 +1,14 @@
-import { ReactNode, createContext, useReducer } from 'react'
+import { ReactNode, createContext, useCallback, useMemo, useReducer } from 'react'
 import { Role, User, UserWithAuth } from '../domin/User.ts'
-const defaultUserState: UserWithAuth = {
+import { ss } from '../utils/storage/index.ts'
+import { userActions } from './actions/useUserAction.ts'
+
+export interface USER_STATE {
+	userState: UserWithAuth
+	userDispatch: React.Dispatch<{ type: string } | User>
+}
+
+const USER_STATE: UserWithAuth = {
 	_id: '',
 	userName: '',
 	realName: '',
@@ -8,24 +16,26 @@ const defaultUserState: UserWithAuth = {
 	isAuthenticated: false
 }
 
-const userReducer = (state: UserWithAuth = defaultUserState, action) => {
-	switch (action.type) {
-		case 'userLogin':
-			return userLogin(state, action)
-		default:
-			return state
-	}
-}
-
-const userLogin = (state: User, action) => {
-	return { ...state, userName: action.userName, isAuthenticated: true }
-}
-
-export const UserContext = createContext({})
+export const UserContext = createContext<USER_STATE>({} as USER_STATE)
 
 const UserProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
-	const [userState, userDispatch] = useReducer(userReducer, defaultUserState)
-	return <UserContext.Provider value={{ userState, userDispatch }}>{children}</UserContext.Provider>
+	const defaultUserState: UserWithAuth = ss.get('USER_STATE') || USER_STATE
+
+	const userReducer = useCallback(
+		(state: UserWithAuth = defaultUserState, action) => {
+			switch (action.type) {
+				case 'SET_LOGIN_STATE':
+					return userActions.userLogin(state, action)
+				default:
+					return state
+			}
+		},
+		[defaultUserState]
+	)
+
+	const [userState, userDispatch] = useReducer(userReducer, ss.get('USER_STATE') || USER_STATE)
+	const value = useMemo(() => ({ userState, userDispatch }), [userState, userDispatch])
+	return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }
 
 export default UserProvider

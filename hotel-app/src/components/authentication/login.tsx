@@ -1,13 +1,15 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { login } from '../../api'
+import { UserContext } from '../../provider/UserProvider'
 
 const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false)
 	const [userName, setUserName] = useState<string>('')
 	const [passWord, setPassWord] = useState<string>('')
 
+	const { userDispatch } = useContext(UserContext)
 	const onFinish = async () => {
 		setLoading(true)
 		// 在这里处理登录请求
@@ -15,6 +17,7 @@ const Login: React.FC = () => {
 			const res = await login({ userName, passWord })
 			await new Promise((resolve) => setTimeout(resolve, 1000))
 			if (res.status === 'Success') {
+				userDispatch({ type: 'SET_LOGIN_STATE', userName })
 				setLoading(false)
 			}
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
