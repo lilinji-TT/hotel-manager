@@ -22,7 +22,7 @@ const App: React.FC = (): ReactElement => {
 		</Routes>
 	)
 	if (!userState) return <>出错了</>
-	return <Router>{userState.isAuthenticated ? authorizedRoutes : unauthorizedRoutes}</Router>
+	return <Router>{!userState.isAuthenticated ? authorizedRoutes : unauthorizedRoutes}</Router>
 }
 
 export default App

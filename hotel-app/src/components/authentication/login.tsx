@@ -1,87 +1,118 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input } from 'antd'
-import React, { useContext, useState } from 'react'
-import { login } from '../../api'
-import { UserContext } from '../../provider/UserProvider'
+import * as React from 'react'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import TextField from '@mui/material/TextField'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Link from '@mui/material/Link'
+import Paper from '@mui/material/Paper'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import Typography from '@mui/material/Typography'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 
-const Login: React.FC = () => {
-	const [loading, setLoading] = useState<boolean>(false)
-	const [userName, setUserName] = useState<string>('')
-	const [passWord, setPassWord] = useState<string>('')
-
-	const { userDispatch } = useContext(UserContext)
-	const onFinish = async () => {
-		setLoading(true)
-		// 在这里处理登录请求
-		try {
-			const res = await login({ userName, passWord })
-			await new Promise((resolve) => setTimeout(resolve, 1000))
-			if (res.status === 'Success') {
-				userDispatch({ type: 'SET_LOGIN_STATE', userName })
-				setLoading(false)
-			}
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (err: any) {
-			await new Promise((resolve) => setTimeout(resolve, 2000))
-			alert(err.message)
-			setLoading(false)
-		}
-	}
-
+function Copyright(props: any) {
 	return (
-		<div className='d-flex'>
-			<img
-				className='object-fit-cover w-100 h-100 position-absolute'
-				alt='酒店'
-				src='https://sitecore-cd-imgr.shangri-la.com/MediaFiles/6/F/E/{6FED1BBC-1D58-4F53-AB2C-59CFC918AB91}1920-800.jpg'
-			/>
-			<div
-				className='border border-2 rounded-4 d-flex justify-content-center align-items-center bg-white'
-				style={{ height: '600px', width: '400px', margin: '200px 7% 0 auto', zIndex: 1 }}
-			>
-				<Form name='normal_login' initialValues={{ remember: true }} onFinish={onFinish} style={{ width: '70%' }}>
-					<Form.Item name='title'>
-						<h1>登录</h1>
-					</Form.Item>
-					<Form.Item name='username' rules={[{ required: true, message: 'Please input your Username!' }]}>
-						<Input
-							prefix={<UserOutlined className='site-form-item-icon' />}
-							placeholder='Username'
-							value={userName}
-							onChange={(e) => setUserName(e.target.value)}
-						/>
-					</Form.Item>
-					<Form.Item name='password' rules={[{ required: true, message: 'Please input your Password!' }]}>
-						<Input
-							prefix={<LockOutlined className='site-form-item-icon' />}
-							type='password'
-							placeholder='Password'
-							value={passWord}
-							onChange={(e) => setPassWord(e.target.value)}
-						/>
-					</Form.Item>
-					<Form.Item>
-						<Form.Item name='remember' valuePropName='checked' noStyle>
-							<Checkbox>记住我</Checkbox>
-						</Form.Item>
-
-						<a className='login-form-forgot' href=''>
-							忘记密码
-						</a>
-					</Form.Item>
-
-					<Form.Item>
-						<Button type='primary' htmlType='submit' className='login-form-button' loading={loading}>
-							登录
-						</Button>
-						<br />
-						<br />
-						Or <a href='https://www.bilibili.com/'>现在注册!</a>
-					</Form.Item>
-				</Form>
-			</div>
-		</div>
+		<Typography variant='body2' color='text.secondary' align='center' {...props}>
+			{'Copyright © '}
+			<Link color='inherit' href='https://mui.com/'>
+				Your Website
+			</Link>{' '}
+			{new Date().getFullYear()}
+			{'.'}
+		</Typography>
 	)
 }
 
-export default Login
+const theme = createTheme()
+
+export default function SignInSide() {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+		const data = new FormData(event.currentTarget)
+		console.log({
+			email: data.get('email'),
+			password: data.get('password')
+		})
+	}
+
+	return (
+		<ThemeProvider theme={theme}>
+			<Grid container component='main' sx={{ height: '100vh' }}>
+				<CssBaseline />
+				<Grid
+					item
+					xs={false}
+					sm={4}
+					md={7}
+					sx={{
+						backgroundImage: 'url(https://source.unsplash.com/random)',
+						backgroundRepeat: 'no-repeat',
+						backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
+						backgroundSize: 'cover',
+						backgroundPosition: 'center'
+					}}
+				/>
+				<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+					<Box
+						sx={{
+							my: 8,
+							mx: 4,
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center'
+						}}
+					>
+						<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+							<LockOutlinedIcon />
+						</Avatar>
+						<Typography component='h1' variant='h5'>
+							Sign in
+						</Typography>
+						<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+							<TextField
+								margin='normal'
+								required
+								fullWidth
+								id='email'
+								label='Email Address'
+								name='email'
+								autoComplete='email'
+								autoFocus
+							/>
+							<TextField
+								margin='normal'
+								required
+								fullWidth
+								name='password'
+								label='Password'
+								type='password'
+								id='password'
+								autoComplete='current-password'
+							/>
+							<FormControlLabel control={<Checkbox value='remember' color='primary' />} label='Remember me' />
+							<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+								Sign In
+							</Button>
+							<Grid container>
+								<Grid item xs>
+									<Link href='#' variant='body2'>
+										Forgot password?
+									</Link>
+								</Grid>
+								<Grid item>
+									<Link href='#' variant='body2'>
+										{"Don't have an account? Sign Up"}
+									</Link>
+								</Grid>
+							</Grid>
+							<Copyright sx={{ mt: 5 }} />
+						</Box>
+					</Box>
+				</Grid>
+			</Grid>
+		</ThemeProvider>
+	)
+}
