@@ -97,7 +97,7 @@ export default function SignInSide() {
 							<PersonIcon />
 						</Avatar>
 						<Typography component='h1' variant='h5'>
-							Sign in
+							注册
 						</Typography>
 						<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
 							<TextWithValidatField
