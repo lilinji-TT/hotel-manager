@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React, { useState, useContext } from 'react'
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import MuiDrawer from '@mui/material/Drawer'
 import Box from '@mui/material/Box'
+import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
@@ -11,32 +11,25 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Badge from '@mui/material/Badge'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import Link from '@mui/material/Link'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import { mainListItems, secondaryListItems } from './listItems'
-
-function Copyright(props: any) {
-	return (
-		<Typography variant='body2' color='text.secondary' align='center' {...props}>
-			{'Copyright © '}
-			<Link color='inherit' href='https://mui.com/'>
-				Your Website
-			</Link>{' '}
-			{new Date().getFullYear()}
-			{'.'}
-		</Typography>
-	)
-}
-
-const drawerWidth = 240
+import { MainListItems, SecondaryListItems } from './navItems'
+import { Route, Routes } from 'react-router-dom'
+import ManagePage from './manage/manage'
+import ChartPage from './chart/chart'
+import RecordPage from './record/record'
+import UsersPage from './users/users'
+import RoomPage from './room/room'
+import { UserContext } from '../provider/UserProvider'
+import { Role } from '../domin/User'
 
 interface AppBarProps extends MuiAppBarProps {
 	open?: boolean
 }
+
+const drawerWidth = 240
+const mdTheme = createTheme()
 
 const AppBar = styled(MuiAppBar, {
 	shouldForwardProp: (prop) => prop !== 'open'
@@ -80,10 +73,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 	}
 }))
 
-const mdTheme = createTheme()
-
-function DashboardContent() {
-	const [open, setOpen] = React.useState(true)
+const DashboardContent: React.FC = () => {
+	const [open, setOpen] = useState(true)
+	const { userState } = useContext(UserContext)
 	const toggleDrawer = () => {
 		setOpen(!open)
 	}
@@ -111,7 +103,7 @@ function DashboardContent() {
 							<MenuIcon />
 						</IconButton>
 						<Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-							Dashboard
+							酒店易管家
 						</Typography>
 						<IconButton color='inherit'>
 							<Badge badgeContent={4} color='secondary'>
@@ -135,9 +127,9 @@ function DashboardContent() {
 					</Toolbar>
 					<Divider />
 					<List component='nav'>
-						{mainListItems}
+						<MainListItems />
 						<Divider sx={{ my: 1 }} />
-						{secondaryListItems}
+						{SecondaryListItems}
 					</List>
 				</Drawer>
 				<Box
@@ -152,35 +144,16 @@ function DashboardContent() {
 				>
 					<Toolbar />
 					<Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
-						<Grid container spacing={3}>
-							{/* Chart */}
-							<Grid item xs={12} md={8} lg={9}>
-								<Paper
-									sx={{
-										p: 2,
-										display: 'flex',
-										flexDirection: 'column',
-										height: 240
-									}}
-								></Paper>
-							</Grid>
-							{/* Recent Deposits */}
-							<Grid item xs={12} md={4} lg={3}>
-								<Paper
-									sx={{
-										p: 2,
-										display: 'flex',
-										flexDirection: 'column',
-										height: 240
-									}}
-								></Paper>
-							</Grid>
-							{/* Recent Orders */}
-							<Grid item xs={12}>
-								<Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}></Paper>
-							</Grid>
-						</Grid>
-						<Copyright sx={{ pt: 4 }} />
+						<Routes>
+							<Route path='/chart' element={<ChartPage />} />
+							{userState.role === Role.ADMIN ? (
+								<Route path='/users' element={<UsersPage />} />
+							) : (
+								<Route path='/manage' element={<ManagePage />} />
+							)}
+							<Route path='/room' element={<RoomPage />} />
+							<Route path='/record' element={<RecordPage />} />
+						</Routes>
 					</Container>
 				</Box>
 			</Box>
@@ -188,6 +161,4 @@ function DashboardContent() {
 	)
 }
 
-export default function Dashboard() {
-	return <DashboardContent />
-}
+export default DashboardContent

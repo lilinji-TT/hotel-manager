@@ -1,8 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.css'
 import React, { ReactElement, useContext } from 'react'
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import LoginPage from './components/authentication/login'
-import DashBoardPage from './components/dashBoard/dashboard'
+import DashBoardPage from './components/dashboard'
 import { UserContext } from './provider/UserProvider'
 
 const App: React.FC = (): ReactElement => {
@@ -17,7 +16,8 @@ const App: React.FC = (): ReactElement => {
 	)
 	const authorizedRoutes = (
 		<Routes>
-			<Route path='/' element={<DashBoardPage />} />
+			<Route path='/*' element={<DashBoardPage />} />
+			<Route path='/' element={<Navigate to='/chart' replace />} />
 			<Route path='/login' element={<Navigate to='/' replace />} />
 		</Routes>
 	)
