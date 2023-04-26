@@ -3,7 +3,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import LoginPage from './components/authentication/login'
 import ReisterPage from './components/authentication/register'
 import ResetPasswordPage from './components/authentication/resetPassword'
-import DashBoardPage from './components/dashBoard/dashboard'
+import DashBoardPage from './components/dashboard'
 import { UserContext } from './provider/UserProvider'
 
 const App: React.FC = (): ReactElement => {
