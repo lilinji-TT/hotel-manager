@@ -23,6 +23,7 @@ import Divider from '@mui/material/Divider/Divider'
 import List from '@mui/material/List/List'
 import { UserContext } from '../provider/UserProvider'
 import { Role } from '../domin/User'
+import { useDialog } from '../hooks/useDialog'
 
 interface AppBarProps extends MuiAppBarProps {
 	open?: boolean
@@ -76,7 +77,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const DashboardContent: React.FC = () => {
 	const [open, setOpen] = useState(true)
 	const { userState } = useContext(UserContext)
+	const { showMessage, Dialog } = useDialog()
 	const toggleDrawer = () => {
+		showMessage({ content: '成功！', duration: 3000, type: 'info' })
 		setOpen(!open)
 	}
 
@@ -157,6 +160,7 @@ const DashboardContent: React.FC = () => {
 					</Container>
 				</Box>
 			</Box>
+			<Dialog />
 		</ThemeProvider>
 	)
 }
