@@ -8,11 +8,12 @@ import Checkbox from '@mui/material/Checkbox'
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import HowToRegIcon from '@mui/icons-material/HowToReg'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Copyright(props: any) {
 	return (
 		<Typography variant='body2' color='text.secondary' align='center' {...props}>
@@ -32,6 +33,7 @@ export default function SignUp() {
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const data = new FormData(event.currentTarget)
+		// eslint-disable-next-line no-console
 		console.log({
 			email: data.get('email'),
 			password: data.get('password')
@@ -51,7 +53,7 @@ export default function SignUp() {
 					}}
 				>
 					<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-						<LockOutlinedIcon />
+						<HowToRegIcon />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
 						Sign up
@@ -105,7 +107,7 @@ export default function SignUp() {
 						</Button>
 						<Grid container justifyContent='flex-end'>
 							<Grid item>
-								<Link href='#' variant='body2'>
+								<Link href='/login' variant='body2'>
 									Already have an account? Sign in
 								</Link>
 							</Grid>

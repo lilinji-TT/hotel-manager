@@ -1,6 +1,5 @@
 import type { AxiosResponse } from 'axios'
 import request from './axios'
-const a = 1
 export interface HttpOption {
 	url: string
 	data?: unknown
