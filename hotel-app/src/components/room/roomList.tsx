@@ -2,6 +2,7 @@ import { Box, Button, MenuItem, Select, Table } from '@mui/material'
 import { useState } from 'react'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
+import useRoomFormDialog from '../../hooks/useRoomFormDialog'
 export interface RoomListProps {
 	roomList: Room[]
 }
@@ -12,6 +13,9 @@ enum EDIT {
 export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 	const [Edit, setEdit] = useState<EDIT>(EDIT.NO)
 	const [rooms, setRooms] = useState(roomList)
+
+	const { FormDialog, open, get } = useRoomFormDialog()
+
 	const handleDelete = (_id: string) => {
 		const updatedRooms = [...rooms]
 		const index = updatedRooms.findIndex((room) => room._id === _id)
@@ -30,8 +34,20 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 			}
 		])
 	}
-	const handleEdit = () => {
-		setEdit(EDIT.YES)
+	const handleEdit = (room: Room) => {
+		get(room)
+		open()
+	}
+	const handleSave = (room, tempRoom) => {
+		setRooms((prevRooms) =>
+			prevRooms.map((prevRoom) => {
+				if (prevRoom._id === room._id) {
+					return tempRoom
+				}
+				return prevRoom
+			})
+		)
+		setEdit(EDIT.NO)
 	}
 	const Switch = ({ room, isEdit }) => {
 		const [tempRoom, setTempRoom] = useState(room)
@@ -45,19 +61,6 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 			const { name, value } = event.target
 			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
 		}
-
-		const handleSave = () => {
-			setRooms((prevRooms) =>
-				prevRooms.map((prevRoom) => {
-					if (prevRoom._id === room._id) {
-						return tempRoom
-					}
-					return prevRoom
-				})
-			)
-			setEdit(EDIT.NO)
-		}
-
 		const editContent = (
 			<>
 				<td>
@@ -82,7 +85,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 					</Select>
 				</td>
 				<td>
-					<Button variant='text' onClick={handleSave}>
+					<Button variant='text' onClick={() => handleSave(room, tempRoom)}>
 						保存
 					</Button>
 				</td>
@@ -96,7 +99,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				<td>{room.price}</td>
 				<td>{room.status}</td>
 				<td>
-					<Button variant='text' color='primary' onClick={handleEdit}>
+					<Button variant='text' color='primary' onClick={() => handleEdit(room)}>
 						编辑
 					</Button>
 					<Button variant='text' color='error' onClick={() => handleDelete(room._id)}>
@@ -106,7 +109,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 			</>
 		)
 
-		return <>{isEdit === EDIT.YES ? editContent : defaultContent}</>
+		return defaultContent
 	}
 	return (
 		<>
@@ -150,6 +153,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 					增加记录
 				</Button>
 			</Box>
+			<FormDialog handleSave={handleSave} />
 		</>
 	)
 }

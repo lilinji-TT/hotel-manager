@@ -1,6 +1,6 @@
+import { Record } from './Record'
 import { Room, RoomType } from './Room'
 import { User } from './User'
-import { Record } from './Record'
 // 身份验证请求
 export type userLogin = Pick<User, 'userName' | 'password'>
 export type userRegister = Pick<User, 'userName' | 'password' | 'activationCode'>
