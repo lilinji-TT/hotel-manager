@@ -1,4 +1,4 @@
-import { Box, Button, MenuItem, Select, Table } from '@mui/material'
+import { Box, Button, Table } from '@mui/material'
 import { useState } from 'react'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
@@ -50,48 +50,6 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 		setEdit(EDIT.NO)
 	}
 	const Switch = ({ room, isEdit }) => {
-		const [tempRoom, setTempRoom] = useState(room)
-
-		const handleInputChange = (event) => {
-			const { name, value } = event.target
-			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
-		}
-
-		const handleSelectChange = (event) => {
-			const { name, value } = event.target
-			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
-		}
-		const editContent = (
-			<>
-				<td>
-					<input type='text' name='number' value={tempRoom.number} onChange={handleInputChange} />
-				</td>
-				<td>
-					<Select name='type' value={tempRoom.type} label='Type' onChange={handleSelectChange}>
-						<MenuItem value={RoomType.DELUXE}>{RoomType.DELUXE}</MenuItem>
-						<MenuItem value={RoomType.DOUNLE}>{RoomType.DOUNLE}</MenuItem>
-						<MenuItem value={RoomType.NONE}>{RoomType.NONE}</MenuItem>
-						<MenuItem value={RoomType.SINGLE}>{RoomType.SINGLE}</MenuItem>
-						<MenuItem value={RoomType.TWIN}>{RoomType.TWIN}</MenuItem>
-					</Select>
-				</td>
-				<td>
-					<input type='number' name='price' value={tempRoom.price} onChange={handleInputChange} />
-				</td>
-				<td>
-					<Select name='status' value={tempRoom.status} label='Status' onChange={handleSelectChange}>
-						<MenuItem value={RoomStatus.AVAILABLE}>{RoomStatus.AVAILABLE}</MenuItem>
-						<MenuItem value={RoomStatus.OCCUPIED}>{RoomStatus.OCCUPIED}</MenuItem>
-					</Select>
-				</td>
-				<td>
-					<Button variant='text' onClick={() => handleSave(room, tempRoom)}>
-						保存
-					</Button>
-				</td>
-			</>
-		)
-
 		const defaultContent = (
 			<>
 				<td>{room.number}</td>
