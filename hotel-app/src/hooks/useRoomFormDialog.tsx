@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import { MenuItem, Select, Stack } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
-import { Room } from '../domin/Room'
+import { Room, RoomStatus, RoomType } from '../domin/Room'
 export default function useRoomFormDialog() {
 	const [open, setOpen] = React.useState(false)
 	const [singleRoom, setSingleRoom] = React.useState<Room>({} as Room)
@@ -29,6 +29,10 @@ export default function useRoomFormDialog() {
 			} = e
 			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
 		}
+		const handleSelectChange = (event) => {
+			const { name, value } = event.target
+			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
+		}
 		const handleFormClose = () => {
 			handleSave(singleRoom, tempRoom)
 			setOpen(false)
@@ -37,46 +41,60 @@ export default function useRoomFormDialog() {
 			<Dialog open={open} onClose={() => handleClose()}>
 				<DialogTitle>房间信息编辑</DialogTitle>
 				<DialogContent>
-					<TextField
-						name='number'
-						margin='dense'
-						label='房间号'
-						type='text'
-						fullWidth
-						variant='outlined'
-						value={tempRoom.number}
-						onChange={handleChange}
-					/>
-					<TextField
-						name='type'
-						margin='dense'
-						label='房间类型'
-						type='text'
-						fullWidth
-						variant='outlined'
-						value={tempRoom.type}
-						onChange={handleChange}
-					/>
-					<TextField
-						name='price'
-						margin='dense'
-						label='房间价格'
-						type='number'
-						fullWidth
-						variant='outlined'
-						value={tempRoom.price}
-						onChange={handleChange}
-					/>
-					<TextField
-						name='status'
-						margin='dense'
-						label='房间状态'
-						type='text'
-						fullWidth
-						variant='outlined'
-						value={tempRoom.status}
-						onChange={handleChange}
-					/>
+					<div>
+						<label>房间号</label>
+						<TextField
+							name='number'
+							margin='dense'
+							type='text'
+							fullWidth
+							variant='outlined'
+							defaultValue={tempRoom.number}
+							onChange={handleChange}
+						/>
+					</div>
+					<div style={{ marginTop: '8px' }}>
+						<label>房间种类</label>
+						<Select
+							name='type'
+							defaultValue={tempRoom.type}
+							aria-hidden={false}
+							fullWidth
+							onChange={handleSelectChange}
+							sx={{ marginTop: '8px' }}
+						>
+							<MenuItem value={RoomType.DELUXE}>{RoomType.DELUXE}</MenuItem>
+							<MenuItem value={RoomType.DOUNLE}>{RoomType.DOUNLE}</MenuItem>
+							<MenuItem value={RoomType.NONE}>{RoomType.NONE}</MenuItem>
+							<MenuItem value={RoomType.SINGLE}>{RoomType.SINGLE}</MenuItem>
+							<MenuItem value={RoomType.TWIN}>{RoomType.TWIN}</MenuItem>
+						</Select>
+					</div>
+					<div style={{ marginTop: '8px' }}>
+						<label>房间价格</label>
+						<TextField
+							name='price'
+							margin='dense'
+							type='number'
+							fullWidth
+							variant='outlined'
+							defaultValue={tempRoom.price}
+							onChange={handleChange}
+						/>
+					</div>
+					<div style={{ marginTop: '8px' }}>
+						<label>房间状态</label>
+						<Select
+							name='status'
+							defaultValue={tempRoom.status}
+							onChange={handleSelectChange}
+							fullWidth
+							sx={{ marginTop: '8px' }}
+						>
+							<MenuItem value={RoomStatus.AVAILABLE}>{RoomStatus.AVAILABLE}</MenuItem>
+							<MenuItem value={RoomStatus.OCCUPIED}>{RoomStatus.OCCUPIED}</MenuItem>
+						</Select>
+					</div>
 				</DialogContent>
 				<DialogActions>
 					<Stack direction='row' spacing={53.5}>
