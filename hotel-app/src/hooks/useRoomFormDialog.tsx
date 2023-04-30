@@ -13,13 +13,6 @@ export default function useRoomFormDialog() {
 
 	const handleClickOpen = () => setOpen(true)
 
-	const handleClose = (field?: string) => {
-		if (field === 'save') {
-			//...
-		}
-		setOpen(false)
-	}
-
 	const FormDialog = ({ handleSave }) => {
 		const [tempRoom, setTempRoom] = React.useState<Room>(singleRoom)
 
@@ -29,16 +22,12 @@ export default function useRoomFormDialog() {
 			} = e
 			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
 		}
-		const handleSelectChange = (event) => {
-			const { name, value } = event.target
-			setTempRoom((prevRoom) => ({ ...prevRoom, [name]: value }))
-		}
 		const handleFormClose = () => {
 			handleSave(singleRoom, tempRoom)
 			setOpen(false)
 		}
 		return (
-			<Dialog open={open} onClose={() => handleClose()}>
+			<Dialog open={open} onClose={() => setOpen(false)}>
 				<DialogTitle>房间信息编辑</DialogTitle>
 				<DialogContent>
 					<div>
@@ -60,7 +49,7 @@ export default function useRoomFormDialog() {
 							defaultValue={tempRoom.type}
 							aria-hidden={false}
 							fullWidth
-							onChange={handleSelectChange}
+							onChange={handleChange}
 							sx={{ marginTop: '8px' }}
 						>
 							<MenuItem value={RoomType.DELUXE}>{RoomType.DELUXE}</MenuItem>
@@ -87,7 +76,7 @@ export default function useRoomFormDialog() {
 						<Select
 							name='status'
 							defaultValue={tempRoom.status}
-							onChange={handleSelectChange}
+							onChange={handleChange}
 							fullWidth
 							sx={{ marginTop: '8px' }}
 						>
@@ -98,16 +87,12 @@ export default function useRoomFormDialog() {
 				</DialogContent>
 				<DialogActions>
 					<Stack direction='row' spacing={53.5}>
-						<div>
-							<Button onClick={handleFormClose} variant='contained'>
-								确定保存
-							</Button>
-						</div>
-						<div>
-							<Button onClick={() => handleClose()} variant='contained'>
-								取消
-							</Button>
-						</div>
+						<Button onClick={handleFormClose} variant='contained'>
+							确定保存
+						</Button>
+						<Button onClick={() => setOpen(false)} variant='contained'>
+							取消
+						</Button>
 					</Stack>
 				</DialogActions>
 			</Dialog>

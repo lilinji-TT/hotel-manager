@@ -49,8 +49,8 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 		)
 		setEdit(EDIT.NO)
 	}
-	const Switch = ({ room, isEdit }) => {
-		const defaultContent = (
+	const Switch = ({ room }) => {
+		return (
 			<>
 				<td>{room.number}</td>
 				<td>{room.type}</td>
@@ -66,8 +66,6 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				</td>
 			</>
 		)
-
-		return defaultContent
 	}
 	return (
 		<>
@@ -100,7 +98,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 					{rooms.map((room) => {
 						return (
 							<tr key={room._id}>
-								<Switch room={room} isEdit={Edit} />
+								<Switch room={room} />
 							</tr>
 						)
 					})}
