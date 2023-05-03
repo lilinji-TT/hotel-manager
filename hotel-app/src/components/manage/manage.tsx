@@ -1,6 +1,14 @@
 import React from 'react'
-const manage: React.FC = () => {
-	return <div>4</div>
+import { RecordContext } from '../../provider/RecordProvider'
+const Manage: React.FC = () => {
+	const { recordState } = React.useContext(RecordContext)
+	return (
+		<div>
+			{recordState.map((record, index) => (
+				<div key={index}>{record.phone}</div>
+			))}
+		</div>
+	)
 }
 
-export default manage
+export default Manage

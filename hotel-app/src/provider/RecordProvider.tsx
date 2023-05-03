@@ -1,33 +1,22 @@
 import { ReactNode, createContext, useReducer } from 'react'
-import { Record, RecordStatus } from '../domin/Record.ts'
-import { RoomType } from '../domin/Room.ts'
+import { Record } from '../domin/Record.ts'
+import { ss } from '../utils/storage/local.ts'
+import { recordActions } from './actions/useRecordActions.ts'
 
 export interface RECORD_STATE {
 	recordState: Record[]
 
-	recordDispatch: React.Dispatch<{ type: string } | Record>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	recordDispatch: React.Dispatch<{ type: string; payload: any }>
 }
-const defaultRecordState: Record[] = [
-	{
-		_id: '',
-		roomId: '',
-		type: RoomType.NONE,
-		number: '',
-		customName: '',
-		idCard: '',
-		phone: '188678467314',
-		checkInDate: new Date(''),
-		checkOutDate: new Date(''),
-		fee: 0,
-		status: RecordStatus.COMPLETED,
-		handlerName: ''
-	}
-]
+const defaultRecordState: Record[] = ss.get('RECORD_STATE') || []
 
 const recordReducer = (state = defaultRecordState, action) => {
 	switch (action.type) {
-		case '':
-			return state
+		case 'GET_RECORD_STATE':
+			return ss.get('RECORD_STATE')
+		case 'SET_RECORD_STATE':
+			return recordActions.addRecord(state, action)
 		default:
 			return state
 	}

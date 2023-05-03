@@ -2,7 +2,8 @@ import { Box, Button, Table } from '@mui/material'
 import { useState } from 'react'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
-import useRoomFormDialog from '../../hooks/useRoomFormDialog'
+import useAdminRoomFormDialog from '../../hooks/useAdminRoomFormDialog'
+import useEmployeeRoomFormDialog from '../../hooks/useEmployeeRoomFormDialog'
 export interface RoomListProps {
 	roomList: Room[]
 }
@@ -11,10 +12,10 @@ enum EDIT {
 	NO = 'NO'
 }
 export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
-	const [Edit, setEdit] = useState<EDIT>(EDIT.NO)
 	const [rooms, setRooms] = useState(roomList)
 
-	const { FormDialog, open, get } = useRoomFormDialog()
+	const { AdminFormDialog, open, get } = useAdminRoomFormDialog()
+	const { EmployeeFormDialog, open: handleOpen, get: handleGet } = useEmployeeRoomFormDialog()
 
 	const handleDelete = (_id: string) => {
 		const updatedRooms = [...rooms]
@@ -36,7 +37,8 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 	}
 	const handleEdit = (room: Room) => {
 		get(room)
-		open()
+		handleGet(room)
+		handleOpen()
 	}
 	const handleSave = (room, tempRoom) => {
 		setRooms((prevRooms) =>
@@ -47,7 +49,6 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				return prevRoom
 			})
 		)
-		setEdit(EDIT.NO)
 	}
 	const Switch = ({ room }) => {
 		return (
@@ -109,7 +110,8 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 					增加记录
 				</Button>
 			</Box>
-			<FormDialog handleSave={handleSave} />
+			<AdminFormDialog handleSave={handleSave} />
+			<EmployeeFormDialog handleSave={handleSave} />
 		</>
 	)
 }

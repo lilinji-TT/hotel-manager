@@ -7,13 +7,13 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import * as React from 'react'
 import { Room, RoomStatus, RoomType } from '../domin/Room'
-export default function useRoomFormDialog() {
+export default function useAdminRoomFormDialog() {
 	const [open, setOpen] = React.useState(false)
 	const [singleRoom, setSingleRoom] = React.useState<Room>({} as Room)
 
 	const handleClickOpen = () => setOpen(true)
 
-	const FormDialog = ({ handleSave }) => {
+	const AdminFormDialog = ({ handleSave }) => {
 		const [tempRoom, setTempRoom] = React.useState<Room>(singleRoom)
 
 		const handleChange = (e) => {
@@ -99,5 +99,5 @@ export default function useRoomFormDialog() {
 		)
 	}
 
-	return { FormDialog, open: handleClickOpen, get: setSingleRoom }
+	return { AdminFormDialog, open: handleClickOpen, get: setSingleRoom }
 }
