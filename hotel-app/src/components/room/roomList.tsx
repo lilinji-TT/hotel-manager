@@ -1,20 +1,19 @@
 import { Box, Button, Table } from '@mui/material'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
-import useRoomFormDialog from '../../hooks/useRoomFormDialog'
+import { Role } from '../../domin/User'
+import useAdminRoomFormDialog from '../../hooks/useAdminRoomFormDialog'
+import useEmployeeRoomFormDialog from '../../hooks/useEmployeeRoomFormDialog'
+import { UserContext } from '../../provider/UserProvider'
 export interface RoomListProps {
 	roomList: Room[]
 }
-enum EDIT {
-	YES = 'YES',
-	NO = 'NO'
-}
 export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
-	const [Edit, setEdit] = useState<EDIT>(EDIT.NO)
 	const [rooms, setRooms] = useState(roomList)
-
-	const { FormDialog, open, get } = useRoomFormDialog()
+	const { userState } = useContext(UserContext)
+	const { AdminFormDialog, open, get } = useAdminRoomFormDialog()
+	const { EmployeeFormDialog, open: handleOpen, get: handleGet } = useEmployeeRoomFormDialog()
 
 	const handleDelete = (_id: string) => {
 		const updatedRooms = [...rooms]
@@ -34,10 +33,17 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 			}
 		])
 	}
+
 	const handleEdit = (room: Room) => {
-		get(room)
-		open()
+		if (userState.role === Role.ADMIN) {
+			get(room)
+			open()
+		} else {
+			handleGet(room)
+			handleOpen()
+		}
 	}
+
 	const handleSave = (room, tempRoom) => {
 		setRooms((prevRooms) =>
 			prevRooms.map((prevRoom) => {
@@ -47,8 +53,8 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				return prevRoom
 			})
 		)
-		setEdit(EDIT.NO)
 	}
+
 	const Switch = ({ room }) => {
 		return (
 			<>
@@ -57,12 +63,20 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				<td>{room.price}</td>
 				<td>{room.status}</td>
 				<td>
-					<Button variant='text' color='primary' onClick={() => handleEdit(room)}>
-						编辑
-					</Button>
-					<Button variant='text' color='error' onClick={() => handleDelete(room._id)}>
-						删除
-					</Button>
+					{userState.role === Role.ADMIN ? (
+						<>
+							<Button variant='text' color='primary' onClick={() => handleEdit(room)}>
+								编辑
+							</Button>
+							<Button variant='text' color='error' onClick={() => handleDelete(room._id)}>
+								删除
+							</Button>
+						</>
+					) : (
+						<Button variant='text' color='primary' onClick={() => handleEdit(room)}>
+							租出
+						</Button>
+					)}
 				</td>
 			</>
 		)
@@ -105,11 +119,14 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				</tbody>
 			</Table>
 			<Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-				<Button size='small' variant='text' color='error' onClick={() => handleAdd()}>
-					增加记录
-				</Button>
+				{userState.role === Role.ADMIN && (
+					<Button size='small' variant='text' color='error' onClick={() => handleAdd()}>
+						增加记录
+					</Button>
+				)}
 			</Box>
-			<FormDialog handleSave={handleSave} />
+			<AdminFormDialog handleSave={handleSave} />
+			<EmployeeFormDialog handleSave={handleSave} />
 		</>
 	)
 }
