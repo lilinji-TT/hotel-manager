@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import * as React from 'react'
 import { Record, RecordStatus } from '../domin/Record'
-import { Room, RoomStatus, RoomType } from '../domin/Room'
+import { Room, RoomStatus } from '../domin/Room'
 import { RecordContext } from '../provider/RecordProvider'
 export default function useAdminRoomFormDialog() {
 	const [open, setOpen] = React.useState(false)
@@ -26,13 +26,13 @@ export default function useAdminRoomFormDialog() {
 			handleSave(singleRoom, { ...singleRoom, status: RoomStatus.OCCUPIED })
 			const recordData = {
 				_id: '',
-				roomId: '',
-				type: RoomType.NONE,
+				roomId: singleRoom._id ?? '',
+				type: singleRoom.type,
 				number: singleRoom.number,
 				customName: record.customName,
 				idCard: record.idCard,
 				phone: record.phone,
-				checkInDate: record.checkInDate,
+				checkInDate: record.checkInDate ?? new Date().toISOString().slice(0, 10),
 				checkOutDate: new Date(''),
 				fee: 0,
 				status: RecordStatus.PROCESSING,
@@ -67,6 +67,7 @@ export default function useAdminRoomFormDialog() {
 					<TextField
 						name='customName'
 						margin='dense'
+						required
 						label='姓名'
 						type='text'
 						fullWidth
@@ -75,6 +76,7 @@ export default function useAdminRoomFormDialog() {
 					/>
 					<TextField
 						name='idCard'
+						required
 						label='身份证号'
 						margin='dense'
 						type='text'
@@ -85,6 +87,7 @@ export default function useAdminRoomFormDialog() {
 					<TextField
 						name='phone'
 						margin='dense'
+						required
 						label='手机号'
 						type='tel'
 						fullWidth
@@ -103,6 +106,7 @@ export default function useAdminRoomFormDialog() {
 					/>
 					<TextField
 						name='handlerName'
+						required
 						margin='dense'
 						label='处理人'
 						type='text'
