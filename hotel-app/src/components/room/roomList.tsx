@@ -46,7 +46,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 		roomDispatch({ type: 'SET_ROOM_STATE', payload: tempRoom })
 	}
 
-	const Switch = ({ room }) => {
+	const Room = ({ room }) => {
 		return (
 			<>
 				<td>{room.number}</td>
@@ -59,12 +59,22 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 							<Button variant='text' color='primary' onClick={() => handleEdit(room)}>
 								编辑
 							</Button>
-							<Button variant='text' color='error' onClick={() => handleDelete(room._id)}>
+							<Button
+								disabled={room.status === RoomStatus.OCCUPIED}
+								variant='text'
+								color='error'
+								onClick={() => handleDelete(room._id)}
+							>
 								删除
 							</Button>
 						</>
 					) : (
-						<Button variant='text' color='primary' onClick={() => handleEdit(room)}>
+						<Button
+							disabled={room.status === RoomStatus.OCCUPIED}
+							variant='text'
+							color='primary'
+							onClick={() => handleEdit(room)}
+						>
 							租出
 						</Button>
 					)}
@@ -103,7 +113,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 					{roomState.map((room) => {
 						return (
 							<tr key={room._id}>
-								<Switch room={room} />
+								<Room room={room} />
 							</tr>
 						)
 					})}
