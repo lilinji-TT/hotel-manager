@@ -25,7 +25,7 @@ export default function useAdminRoomFormDialog() {
 		const handleFormClose = () => {
 			handleSave(singleRoom, { ...singleRoom, status: RoomStatus.OCCUPIED })
 			const recordData = {
-				_id: '',
+				_id: record._id ?? '',
 				roomId: singleRoom._id ?? '',
 				type: singleRoom.type,
 				number: singleRoom.number,

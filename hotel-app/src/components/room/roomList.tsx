@@ -1,37 +1,35 @@
 import { Box, Button, Table } from '@mui/material'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
 import { Role } from '../../domin/User'
 import useAdminRoomFormDialog from '../../hooks/useAdminRoomFormDialog'
 import useEmployeeRoomFormDialog from '../../hooks/useEmployeeRoomFormDialog'
+import { RoomContext } from '../../provider/RoomProvider'
 import { UserContext } from '../../provider/UserProvider'
 export interface RoomListProps {
 	roomList: Room[]
 }
 export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
-	const [rooms, setRooms] = useState(roomList)
 	const { userState } = useContext(UserContext)
+	const { roomState, roomDispatch } = useContext(RoomContext)
 	const { AdminFormDialog, open, get } = useAdminRoomFormDialog()
 	const { EmployeeFormDialog, open: handleOpen, get: handleGet } = useEmployeeRoomFormDialog()
 
 	const handleDelete = (_id: string) => {
-		const updatedRooms = [...rooms]
-		const index = updatedRooms.findIndex((room) => room._id === _id)
-		updatedRooms.splice(index, 1)
-		setRooms(updatedRooms)
+		roomDispatch({ type: 'DELETE_SINGLE_ROOM', payload: _id })
 	}
 	const handleAdd = () => {
-		setRooms([
-			...rooms,
-			{
+		roomDispatch({
+			type: 'ADD_SINGLE_ROOM',
+			payload: {
 				_id: `${Date.now()}`,
 				number: `${Date.now()}`,
 				price: 100,
 				status: RoomStatus.AVAILABLE,
 				type: RoomType.SINGLE
 			}
-		])
+		})
 	}
 
 	const handleEdit = (room: Room) => {
@@ -45,14 +43,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 	}
 
 	const handleSave = (room, tempRoom) => {
-		setRooms((prevRooms) =>
-			prevRooms.map((prevRoom) => {
-				if (prevRoom._id === room._id) {
-					return tempRoom
-				}
-				return prevRoom
-			})
-		)
+		roomDispatch({ type: 'SET_ROOM_STATE', payload: tempRoom })
 	}
 
 	const Switch = ({ room }) => {
@@ -109,7 +100,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{rooms.map((room) => {
+					{roomState.map((room) => {
 						return (
 							<tr key={room._id}>
 								<Switch room={room} />

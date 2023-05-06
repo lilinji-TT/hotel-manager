@@ -46,7 +46,7 @@ export default function useAdminRoomFormDialog() {
 						<label>房间种类</label>
 						<Select
 							name='type'
-							defaultValue={tempRoom.type}
+							value={tempRoom.type}
 							aria-hidden={false}
 							fullWidth
 							onChange={handleChange}
@@ -73,13 +73,7 @@ export default function useAdminRoomFormDialog() {
 					</div>
 					<div style={{ marginTop: '8px' }}>
 						<label>房间状态</label>
-						<Select
-							name='status'
-							defaultValue={tempRoom.status}
-							onChange={handleChange}
-							fullWidth
-							sx={{ marginTop: '8px' }}
-						>
+						<Select name='status' value={tempRoom.status} onChange={handleChange} fullWidth sx={{ marginTop: '8px' }}>
 							<MenuItem value={RoomStatus.AVAILABLE}>{RoomStatus.AVAILABLE}</MenuItem>
 							<MenuItem value={RoomStatus.OCCUPIED}>{RoomStatus.OCCUPIED}</MenuItem>
 						</Select>

@@ -1,28 +1,26 @@
 import { ReactNode, createContext, useReducer } from 'react'
-import { Room, RoomStatus, RoomType } from '../domin/Room.ts'
+import { Room } from '../domin/Room.ts'
 import { ss } from '../utils/storage/index.ts'
+import { roomActions } from './actions/useRoomActions.ts'
 
 export interface ROOM_STATE {
-	roomState: RoomStatus[]
+	roomState: Room[]
 
-	roomDispatch: React.Dispatch<{ type: string } | RoomStatus>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	roomDispatch: React.Dispatch<{ type: string; payload: any }>
 }
-const defaultRoomState: Room[] = [
-	{
-		_id: '',
-		type: RoomType.NONE,
-		number: '',
-		price: 0,
-		status: RoomStatus.OCCUPIED
-	}
-]
+const defaultRoomState: Room[] = ss.get('ROOM_STATE') ?? []
 
 const roomReducer = (state = defaultRoomState, action) => {
 	switch (action.type) {
 		case 'GET_ROOM_STATE':
-			return ss.get('ROOM_STATE')
+			return ss.get('ROOM_STATE') ?? []
 		case 'SET_ROOM_STATE':
-			return ss.set('ROOM_STATE', state)
+			return roomActions.setRoomState(state, action)
+		case 'ADD_SINGLE_ROOM':
+			return roomActions.addRoom(state, action)
+		case 'DELETE_SINGLE_ROOM':
+			return roomActions.deleteRoom(state, action)
 		default:
 			return state
 	}
