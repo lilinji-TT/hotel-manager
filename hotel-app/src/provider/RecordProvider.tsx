@@ -4,12 +4,18 @@ import { ss } from '../utils/storage/local.ts'
 import { recordActions } from './actions/useRecordActions.ts'
 
 export interface RECORD_STATE {
-	recordState: Record[]
+	recordState: {
+		records: Record[]
+		historyRecords: Record[]
+	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	recordDispatch: React.Dispatch<{ type: string; payload: any }>
 }
-const defaultRecordState: Record[] = ss.get('RECORD_STATE') || []
+const defaultRecordState: RECORD_STATE = ss.get('RECORD_STATE') || {
+	records: [],
+	historyRecords: []
+}
 
 const recordReducer = (state = defaultRecordState, action) => {
 	switch (action.type) {
@@ -17,6 +23,8 @@ const recordReducer = (state = defaultRecordState, action) => {
 			return ss.get('RECORD_STATE')
 		case 'SET_RECORD_STATE':
 			return recordActions.addRecord(state, action)
+		case 'SET_HISTORY_RECORD_STATE':
+			return recordActions.addHistoryRecord(state, action)
 		default:
 			return state
 	}
