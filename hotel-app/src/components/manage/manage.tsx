@@ -1,13 +1,16 @@
 import { Button, Table } from '@mui/material'
 import React from 'react'
 import { RecordContext } from '../../provider/RecordProvider'
+import { RoomContext } from '../../provider/RoomProvider'
 const Manage: React.FC = () => {
 	const { recordState, recordDispatch } = React.useContext(RecordContext)
+	const { roomDispatch } = React.useContext(RoomContext)
 	const handleSettlement = (record) => {
 		recordDispatch({
 			type: 'SET_HISTORY_RECORD_STATE',
 			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee: 100 }
 		})
+		roomDispatch({ type: 'UPDATE_ROOM_STATE', payload: record.number })
 	}
 	const Switch = ({ record }) => {
 		return (

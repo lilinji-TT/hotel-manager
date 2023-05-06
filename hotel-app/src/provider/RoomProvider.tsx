@@ -21,6 +21,8 @@ const roomReducer = (state = defaultRoomState, action) => {
 			return roomActions.addRoom(state, action)
 		case 'DELETE_SINGLE_ROOM':
 			return roomActions.deleteRoom(state, action)
+		case 'UPDATE_ROOM_STATE':
+			return roomActions.updateRoom(state, action)
 		default:
 			return state
 	}
