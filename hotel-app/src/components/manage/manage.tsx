@@ -2,7 +2,13 @@ import { Button, Table } from '@mui/material'
 import React from 'react'
 import { RecordContext } from '../../provider/RecordProvider'
 const Manage: React.FC = () => {
-	const { recordState } = React.useContext(RecordContext)
+	const { recordState, recordDispatch } = React.useContext(RecordContext)
+	const handleSettlement = (record) => {
+		recordDispatch({
+			type: 'SET_HISTORY_RECORD_STATE',
+			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee: 100 }
+		})
+	}
 	const Switch = ({ record }) => {
 		return (
 			<>
@@ -14,7 +20,7 @@ const Manage: React.FC = () => {
 				<td>{record.checkInDate}</td>
 				<td>{record.handlerName}</td>
 				<td>
-					<Button variant='text' color='primary'>
+					<Button variant='text' color='primary' onClick={() => handleSettlement(record)}>
 						结算
 					</Button>
 				</td>
@@ -52,7 +58,7 @@ const Manage: React.FC = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{recordState.map((record, index) => {
+					{recordState.records.map((record, index) => {
 						return (
 							<tr key={index}>
 								<Switch record={record} />
