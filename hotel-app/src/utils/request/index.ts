@@ -18,3 +18,8 @@ export const del = (url: string, params = {}) => {
 		params
 	})
 }
+
+//patch请求
+export const patch = (url: string, data = {}) => {
+	return request.patch(url, data)
+}

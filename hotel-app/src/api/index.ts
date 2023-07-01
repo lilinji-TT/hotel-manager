@@ -1,55 +1,86 @@
-import { get, post, del } from '../utils/request'
-import * as request from '../domin/Request'
-import { Entity } from '../domin/Entity'
+import { del, get, patch, post } from '../utils/request'
 
-export const login = (data: request.userLogin) => {
-	return post('/user/login', data)
+// 获取员工列表
+export const getGroupList = () => {
+	return get('/group/list/')
 }
 
-export const register = (data: request.userRegister) => {
-	return post('/user/register', data)
+// 新增员工
+export const addGroup = (realName) => {
+	return post('/group/add/', { realName })
 }
 
-export const resetPassword = (data: request.userReset) => {
-	return post('/user/reset', data)
+// 删除员工
+export const deleteGroup = (id) => {
+	return del(`/group/delete/${id}/`)
 }
 
-export const getRegularUserList = () => {
-	return get('/user/list')
+// 修改员工
+export const updateGroup = (id, newRealName) => {
+	return patch(`/group/update/${id}/`, { newRealName })
 }
 
-export const addRegularUser = (data: request.userRealName) => {
-	return post('/user/add', data)
-}
-
-export const removeRegularUser = (params: request.userRealName) => {
-	return get('/user/delete', params)
-}
-
+// 获取房间列表
 export const getRoomList = () => {
-	return get('/room/list')
+	return get('/room/list/')
 }
 
-export const addNewRoom = (data: request.roomBaseDetail) => {
-	return post('/room/add', data)
+// 新增房间
+export const addRoom = (type, number, price) => {
+	return post('/room/add/', { type, number, price })
 }
 
-export const removeRooms = (data: request.roomBaseDetailWithoutType) => {
-	return del('/room/delete', data)
+// 删除房间
+export const deleteRoom = (id) => {
+	return del(`/room/delete/${id}/`)
 }
 
-export const updateRoom = (data: request.newRoom, params: request.roomNumber) => {
-	return post('/room/update', data, params)
+// 修改房间
+export const updateRoom = (id, newType, newNumber, newPrice) => {
+	return patch(`/room/update/${id}/`, { newType, newNumber, newPrice })
 }
 
-export const getRecordListByStatus = (params: request.recordStatus) => {
-	return get('/record/list', params)
+// 员工注册
+export const registerMember = (userName, passWord, activationCode) => {
+	return post('/member/register/', { userName, passWord, activationCode })
 }
 
-export const addNewRecord = (data: request.recordWithoutId) => {
-	return post('/record/add', data)
+// 登录模块
+export const login = (userName, passWord) => {
+	return post('/public/login/', { userName, passWord })
 }
 
-export const updateNewRecord = (data: request.recordUpdate, params: Entity) => {
-	return post('/record/update', data, params)
+// 忘记密码
+export const forgetPassword = (userName, activationCode, newPassword) => {
+	return post('/public/forget/', { userName, activationCode, newPassword })
+}
+
+// 修改密码
+export const updatePassword = (userName, activationCode, newPassword, oldPassword) => {
+	return post('/public/update/', { userName, activationCode, newPassword, oldPassword })
+}
+
+// 获取历史订单
+export const getHistoryOrders = () => {
+	return get('/public/list/')
+}
+
+// 获取进行中订单
+export const getOngoingOrders = () => {
+	return get('/order/on_list/')
+}
+
+// 新增订单
+export const addOrder = (roomId, type, number, customName, idCard, phone, handlerName) => {
+	return post('/order/add/', { roomId, type, number, customName, idCard, phone, handlerName })
+}
+
+// 计算费用
+export const calculateOrderFee = (id) => {
+	return post('/order/cal/', { id })
+}
+
+// 结束订单
+export const finishOrder = (id) => {
+	return patch(`/order/finish/${id}/`)
 }
