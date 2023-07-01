@@ -21,7 +21,7 @@ export const updateGroup = (id, newRealName) => {
 }
 
 // 获取房间列表
-export const getRoomList = () => {
+export const getRoomList = async () => {
 	return get('/room/list/')
 }
 
@@ -32,7 +32,7 @@ export const addRoom = (type, number, price) => {
 
 // 删除房间
 export const deleteRoom = (id) => {
-	return del(`/room/delete/${id}/`)
+	return del(`/room/delete${id}/`)
 }
 
 // 修改房间

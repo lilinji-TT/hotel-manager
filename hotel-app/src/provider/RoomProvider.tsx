@@ -17,6 +17,8 @@ const roomReducer = (state = defaultRoomState, action) => {
 			return ss.get('ROOM_STATE') ?? []
 		case 'SET_ROOM_STATE':
 			return roomActions.setRoomState(state, action)
+		case 'SET_ROOM_LIST':
+			return roomActions.setRoomList(state, action)
 		case 'ADD_SINGLE_ROOM':
 			return roomActions.addRoom(state, action)
 		case 'DELETE_SINGLE_ROOM':

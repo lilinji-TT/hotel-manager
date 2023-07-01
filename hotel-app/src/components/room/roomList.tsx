@@ -1,5 +1,6 @@
 import { Box, Button, Table } from '@mui/material'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
+import { getRoomList } from '../../api'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
 import { Role } from '../../domin/User'
@@ -10,7 +11,7 @@ import { UserContext } from '../../provider/UserProvider'
 export interface RoomListProps {
 	roomList: Room[]
 }
-export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
+export const RoomListPage: React.FC<RoomListProps> = () => {
 	const { userState } = useContext(UserContext)
 	const { roomState, roomDispatch } = useContext(RoomContext)
 	const { AdminFormDialog, open, get } = useAdminRoomFormDialog()
@@ -82,6 +83,24 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 			</>
 		)
 	}
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				// 执行异步操作
+				const {
+					data: { data }
+				} = await getRoomList()
+
+				// 处理获取到的数据
+				roomDispatch({ type: 'SET_ROOM_LIST', payload: data })
+			} catch (error) {
+				// 处理错误
+			}
+		}
+		fetchData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 	return (
 		<>
 			<Table
@@ -112,7 +131,7 @@ export const RoomListPage: React.FC<RoomListProps> = ({ roomList }) => {
 				<tbody>
 					{roomState.map((room) => {
 						return (
-							<tr key={room._id}>
+							<tr key={room.number}>
 								<Room room={room} />
 							</tr>
 						)

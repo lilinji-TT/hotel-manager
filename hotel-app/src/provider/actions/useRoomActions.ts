@@ -1,9 +1,8 @@
 import { ss } from '../../utils/storage'
-
 export const roomActions = {
 	setRoomState: (state, action) => {
 		const room_state = state.map((room) => {
-			if (room._id === action.payload._id) {
+			if (room.number === action.payload.number) {
 				return action.payload
 			}
 			return room
@@ -35,5 +34,8 @@ export const roomActions = {
 		room_state.splice(index, 1)
 		ss.set('ROOM_STATE', room_state)
 		return room_state
+	},
+	setRoomList: (state, action) => {
+		return action.payload
 	}
 }
