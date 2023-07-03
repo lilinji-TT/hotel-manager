@@ -12,7 +12,7 @@ const USER_STATE: UserStateWithAuth = {
 	_id: '',
 	userName: '',
 	realName: '',
-	role: Role.ADMIN,
+	role: Role.REGULAR,
 	isAuthenticated: false
 }
 

@@ -3,6 +3,7 @@ import TableList from '../common/tableList/tableList'
 import { Record } from '../../domin/Record'
 import { RecordRows as rows } from '../../mock/tableDate'
 import { useState } from 'react'
+import { getHistoryOrders } from '../../api'
 
 const headCells: RecordHeadCell[] = [
 	{
@@ -68,7 +69,7 @@ const headCells: RecordHeadCell[] = [
 ]
 const RecordPage: React.FC = () => {
 	const [selected, setSelected] = useState<string[]>([])
-
+	const { recordState, recordDispatch } = useContext(RecordContext)
 	const handleSelectChange = (selectValue: string[]) => {
 		setSelected(selectValue)
 	}
@@ -77,6 +78,18 @@ const RecordPage: React.FC = () => {
 	const handleSearchChange = (search: string) => {
 		setSearch(search)
 	}
+
+	const fetchHistoryRecord = async () => {
+		const {
+			data: { data }
+		} = await getHistoryOrders()
+
+		recordDispatch({ type: 'SET_HISTORY_RECORD_LIST', payload: data })
+	}
+	useEffect(() => {
+		fetchHistoryRecord()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 	return (
 		<TableList<Record>
 			title='订单记录'

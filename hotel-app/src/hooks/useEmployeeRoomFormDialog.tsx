@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import * as React from 'react'
+import { addOrder } from '../api'
 import { Record, RecordStatus } from '../domin/Record'
 import { Room, RoomStatus } from '../domin/Room'
 import { RecordContext } from '../provider/RecordProvider'
@@ -22,10 +23,24 @@ export default function useAdminRoomFormDialog() {
 			} = e
 			setRecord((preRecord) => ({ ...preRecord, [name]: value }))
 		}
-		const handleFormClose = () => {
+		const handleFormClose = async () => {
+			setOpen(false)
 			handleSave(singleRoom, { ...singleRoom, status: RoomStatus.OCCUPIED })
+			const {
+				data: {
+					data: { _id }
+				}
+			} = await addOrder(
+				singleRoom._id,
+				singleRoom.type,
+				singleRoom.number,
+				record.customName,
+				record.idCard,
+				record.phone,
+				record.handlerName
+			)
 			const recordData = {
-				_id: record._id ?? '',
+				_id: _id ?? '',
 				roomId: singleRoom._id ?? '',
 				type: singleRoom.type,
 				number: singleRoom.number,
@@ -34,12 +49,11 @@ export default function useAdminRoomFormDialog() {
 				phone: record.phone,
 				checkInDate: record.checkInDate ?? new Date().toISOString().slice(0, 10),
 				checkOutDate: new Date(''),
-				fee: 0,
+				fee: singleRoom.price,
 				status: RecordStatus.PROCESSING,
 				handlerName: record.handlerName
 			}
 			recordDispatch({ type: 'SET_RECORD_STATE', payload: recordData })
-			setOpen(false)
 		}
 		return (
 			<Dialog open={open} onClose={() => setOpen(false)}>

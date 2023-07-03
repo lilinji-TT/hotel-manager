@@ -25,6 +25,10 @@ const recordReducer = (state = defaultRecordState, action) => {
 			return recordActions.addRecord(state, action)
 		case 'SET_HISTORY_RECORD_STATE':
 			return recordActions.addHistoryRecord(state, action)
+		case 'SET_HISTORY_RECORD_LIST':
+			return recordActions.setHistoryRecordList(state, action)
+		case 'SET_RECORD_LIST':
+			return recordActions.setRecordList(state, action)
 		default:
 			return state
 	}

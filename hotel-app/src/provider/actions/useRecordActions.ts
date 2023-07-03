@@ -23,5 +23,15 @@ export const recordActions = {
 		const index = newRecords.findIndex((record) => record._id === action.payload._id)
 		newRecords.splice(index, 1)
 		return newRecords
+	},
+	setHistoryRecordList: (state, action) => {
+		state.historyRecords = action.payload
+		ss.set('RECORD_STATE', state)
+		return state
+	},
+	setRecordList: (state, action) => {
+		state.records = action.payload
+		ss.set('RECORD_STATE', state)
+		return state
 	}
 }
