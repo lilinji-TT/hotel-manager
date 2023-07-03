@@ -57,7 +57,7 @@ export default function SignInSide() {
 				password: password.trim()
 			}
 			setLoading(true)
-			const res = await login(login_data)
+			const res = await login(login_data, '11')
 			!res && (userDispatch({ type: 'SET_LOGIN_STATE' }), setLoading(false))
 		} catch (err) {
 			//...
@@ -97,7 +97,7 @@ export default function SignInSide() {
 							<PersonIcon />
 						</Avatar>
 						<Typography component='h1' variant='h5'>
-							注册
+							登录
 						</Typography>
 						<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
 							<TextWithValidatField
@@ -151,7 +151,7 @@ export default function SignInSide() {
 									</Link>
 								</Grid>
 								<Grid item>
-									<Link href={'/register'}>{'Sign Up'}</Link>
+									<Link href={'/register'}>{'去注册'}</Link>
 								</Grid>
 							</Grid>
 							<Copyright sx={{ mt: 5 }} />

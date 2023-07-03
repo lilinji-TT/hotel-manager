@@ -56,7 +56,7 @@ export default function SignUp() {
 						<HowToRegIcon />
 					</Avatar>
 					<Typography component='h1' variant='h5'>
-						Sign up
+						注册
 					</Typography>
 					<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 						<Grid container spacing={2}>
@@ -67,29 +67,33 @@ export default function SignUp() {
 									required
 									fullWidth
 									id='firstName'
-									label='First Name'
+									label='姓'
 									autoFocus
 								/>
 							</Grid>
 							<Grid item xs={12} sm={6}>
-								<TextField
-									required
-									fullWidth
-									id='lastName'
-									label='Last Name'
-									name='lastName'
-									autoComplete='family-name'
-								/>
+								<TextField required fullWidth id='lastName' label='名' name='lastName' autoComplete='family-name' />
 							</Grid>
 							<Grid item xs={12}>
-								<TextField required fullWidth id='email' label='Email Address' name='email' autoComplete='email' />
+								<TextField required fullWidth id='email' label='邮箱' name='email' autoComplete='email' />
 							</Grid>
 							<Grid item xs={12}>
 								<TextField
 									required
 									fullWidth
 									name='password'
-									label='Password'
+									label='密码'
+									type='password'
+									id='password'
+									autoComplete='new-password'
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									required
+									fullWidth
+									name='password'
+									label='确认密码'
 									type='password'
 									id='password'
 									autoComplete='new-password'
@@ -103,12 +107,12 @@ export default function SignUp() {
 							</Grid>
 						</Grid>
 						<Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-							Sign Up
+							确定
 						</Button>
 						<Grid container justifyContent='flex-end'>
 							<Grid item>
 								<Link href='/login' variant='body2'>
-									Already have an account? Sign in
+									已经拥有账户？立即登录
 								</Link>
 							</Grid>
 						</Grid>

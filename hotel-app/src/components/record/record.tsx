@@ -1,67 +1,94 @@
-import { Table } from '@mui/material'
-import React, { useContext } from 'react'
-import { RecordContext } from '../../provider/RecordProvider'
-const Record: React.FC = () => {
-	const { recordState } = useContext(RecordContext)
-	const Switch = ({ record }) => {
-		return (
-			<>
-				<td>{record.number}</td>
-				<td>{record.type}</td>
-				<td>{record.customName}</td>
-				<td>{record.idCard}</td>
-				<td>{record.phone}</td>
-				<td>{record.checkInDate}</td>
-				<td>{record.checkOutDate}</td>
-				<td>{record.fee}</td>
-				<td>{record.handlerName}</td>
-			</>
-		)
+import { RecordHeadCell } from '../../domin/Headline'
+import TableList from '../common/tableList/tableList'
+import { Record } from '../../domin/Record'
+import { RecordRows as rows } from '../../mock/tableDate'
+import { useState } from 'react'
+
+const headCells: RecordHeadCell[] = [
+	{
+		id: 'number',
+		numeric: false,
+		disablePadding: true,
+		label: '房间号'
+	},
+	{
+		id: 'type',
+		numeric: true,
+		disablePadding: false,
+		label: '房间类型'
+	},
+	{
+		id: 'customName',
+		numeric: true,
+		disablePadding: false,
+		label: '姓名'
+	},
+	{
+		id: 'idCard',
+		numeric: true,
+		disablePadding: false,
+		label: '身份证号'
+	},
+	{
+		id: 'phone',
+		numeric: true,
+		disablePadding: false,
+		label: '电话'
+	},
+	{
+		id: 'checkInDate',
+		numeric: true,
+		disablePadding: false,
+		label: '入住时间'
+	},
+	{
+		id: 'checkOutDate',
+		numeric: true,
+		disablePadding: false,
+		label: '退房时间'
+	},
+	{
+		id: 'status',
+		numeric: true,
+		disablePadding: false,
+		label: '状态'
+	},
+	{
+		id: 'fee',
+		numeric: true,
+		disablePadding: false,
+		label: '总计'
+	},
+	{
+		id: 'handlerName',
+		numeric: true,
+		disablePadding: false,
+		label: '处理人'
+	}
+]
+const RecordPage: React.FC = () => {
+	const [selected, setSelected] = useState<string[]>([])
+
+	const handleSelectChange = (selectValue: string[]) => {
+		setSelected(selectValue)
+	}
+
+	const [search, setSearch] = useState<string>('')
+	const handleSearchChange = (search: string) => {
+		setSearch(search)
 	}
 	return (
-		<>
-			<Table
-				aria-label='basic table'
-				sx={{
-					'& tr > *:first-of-type".': {
-						position: 'sticky',
-						left: 0,
-						boxShadow: '1px 0 var(--TableCell-borderColor)',
-						bgcolor: 'background.surface'
-					},
-					'& tr > *:last-child': {
-						position: 'sticky',
-						right: 0,
-						bgcolor: 'var(--TableCell-headBackground)'
-					}
-				}}
-			>
-				<thead>
-					<tr>
-						<th style={{ width: 200 }}>房间号</th>
-						<th style={{ width: 200 }}>房间类型&nbsp;</th>
-						<th style={{ width: 200 }}>客户姓名&nbsp;</th>
-						<th style={{ width: 200 }}>客户身份证号&nbsp;</th>
-						<th style={{ width: 200 }}>客户电话号&nbsp;</th>
-						<th style={{ width: 200 }}>入住时间&nbsp;</th>
-						<th style={{ width: 200 }}>退房时间&nbsp;</th>
-						<th style={{ width: 200 }}>结算费用&nbsp;</th>
-						<th style={{ width: 200 }}>处理员工姓名&nbsp;</th>
-						<th aria-label='last' style={{ width: 'var(--Table-lastColumnWidth)' }} />
-					</tr>
-				</thead>
-				<tbody>
-					{recordState.historyRecords.map((record, index) => {
-						return (
-							<tr key={index}>
-								<Switch record={record} />
-							</tr>
-						)
-					})}
-				</tbody>
-			</Table>
-		</>
+		<TableList<Record>
+			title='订单记录'
+			headCells={headCells}
+			rows={rows}
+			selectBox={false}
+			selected={selected}
+			search={search}
+			handleSelectChange={handleSelectChange}
+			handleSearchChange={handleSearchChange}
+		/>
 	)
 }
 
-export default Record
+export default RecordPage

@@ -1,77 +1,113 @@
-import { Button, Table } from '@mui/material'
-import React from 'react'
-import { RecordContext } from '../../provider/RecordProvider'
-import { RoomContext } from '../../provider/RoomProvider'
-const Manage: React.FC = () => {
-	const { recordState, recordDispatch } = React.useContext(RecordContext)
-	const { roomDispatch } = React.useContext(RoomContext)
-	const handleSettlement = (record) => {
-		recordDispatch({
-			type: 'SET_HISTORY_RECORD_STATE',
-			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee: 100 }
-		})
-		roomDispatch({ type: 'UPDATE_ROOM_STATE', payload: record.number })
+import { ManageHeadCell } from '../../domin/Headline'
+import TableList from '../common/tableList/tableList'
+import { Manage } from '../../domin/Record'
+import { RecordRows as rows } from '../../mock/tableDate'
+import { useMemo, useState } from 'react'
+import { IconButton, Stack, Tooltip } from '@mui/material'
+import EditCalendarIcon from '@mui/icons-material/EditCalendar'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ManageTableEditList from './manageTableEditList'
+
+const headCells: ManageHeadCell[] = [
+	{
+		id: 'number',
+		numeric: false,
+		disablePadding: true,
+		label: '房间号'
+	},
+	{
+		id: 'type',
+		numeric: true,
+		disablePadding: false,
+		label: '房间类型'
+	},
+	{
+		id: 'customName',
+		numeric: true,
+		disablePadding: false,
+		label: '客户姓名'
+	},
+	{
+		id: 'idCard',
+		numeric: true,
+		disablePadding: false,
+		label: '客户身份证号'
+	},
+	{
+		id: 'phone',
+		numeric: true,
+		disablePadding: false,
+		label: '客户电话'
+	},
+	{
+		id: 'checkInDate',
+		numeric: true,
+		disablePadding: false,
+		label: '入住时间'
+	},
+	{
+		id: 'handlerName',
+		numeric: true,
+		disablePadding: false,
+		label: '处理人'
 	}
-	const Switch = ({ record }) => {
-		return (
-			<>
-				<td>{record.number}</td>
-				<td>{record.type}</td>
-				<td>{record.customName}</td>
-				<td>{record.idCard}</td>
-				<td>{record.phone}</td>
-				<td>{record.checkInDate}</td>
-				<td>{record.handlerName}</td>
-				<td>
-					<Button variant='text' color='primary' onClick={() => handleSettlement(record)}>
-						结算
-					</Button>
-				</td>
-			</>
-		)
+]
+const ManagePage: React.FC = () => {
+	const [selected, setSelected] = useState<string[]>([])
+	const handleSelectChange = (selectValue: string[]) => {
+		setSelected(selectValue)
 	}
+
+	const [search, setSearch] = useState<string>('')
+	const handleSearchChange = (search: string) => {
+		setSearch(search)
+	}
+	const [open, setOpen] = useState(false)
+
+	const handleClickOpen = () => {
+		setOpen(true)
+	}
+	const handleClose = () => {
+		setOpen(false)
+	}
+
+	const selectedItem = useMemo(() => {
+		return rows.filter((item) => item._id === selected[0])
+	}, [selected])
+
 	return (
-		<>
-			<Table
-				aria-label='basic table'
-				sx={{
-					'& tr > *:first-of-type".': {
-						position: 'sticky',
-						left: 0,
-						boxShadow: '1px 0 var(--TableCell-borderColor)',
-						bgcolor: 'background.surface'
-					},
-					'& tr > *:last-child': {
-						position: 'sticky',
-						right: 0,
-						bgcolor: 'var(--TableCell-headBackground)'
-					}
-				}}
-			>
-				<thead>
-					<tr>
-						<th style={{ width: 200 }}>房间号</th>
-						<th style={{ width: 200 }}>房间类型&nbsp;</th>
-						<th style={{ width: 200 }}>客户姓名&nbsp;</th>
-						<th style={{ width: 200 }}>客户身份证号&nbsp;</th>
-						<th style={{ width: 200 }}>客户电话号&nbsp;</th>
-						<th style={{ width: 200 }}>入住时间&nbsp;</th>
-						<th style={{ width: 200 }}>处理员工姓名&nbsp;</th>
-						<th aria-label='last' style={{ width: 'var(--Table-lastColumnWidth)' }} />
-					</tr>
-				</thead>
-				<tbody>
-					{recordState.records.map((record, index) => {
-						return (
-							<tr key={index}>
-								<Switch record={record} />
-							</tr>
-						)
-					})}
-				</tbody>
-			</Table>
-		</>
+		<TableList<Manage>
+			title='入住管理'
+			headCells={headCells}
+			rows={rows}
+			selectBox={true}
+			selected={selected}
+			search={search}
+			handleSelectChange={handleSelectChange}
+			handleSearchChange={handleSearchChange}
+		>
+			{selected.length > 0 && (
+				<Stack spacing={1} direction='row'>
+					{selected.length === 1 && (
+						<>
+							<Tooltip title='编辑'>
+								<IconButton>
+									<EditCalendarIcon onClick={() => handleClickOpen()} />
+								</IconButton>
+							</Tooltip>
+							<ManageTableEditList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
+						</>
+					)}
+
+					<Tooltip title='删除'>
+						<IconButton>
+							<DeleteIcon />
+						</IconButton>
+					</Tooltip>
+				</Stack>
+			)}
+		</TableList>
 	)
 }
 
-export default Manage
+export default ManagePage

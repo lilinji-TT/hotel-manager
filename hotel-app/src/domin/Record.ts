@@ -16,3 +16,5 @@ export interface Record extends Omit<Room, '_id' | 'status' | 'price'>, Entity {
 	status: RecordStatus
 	handlerName: string
 }
+
+export type Manage = Omit<Record, '_id' | 'checkOutDate' | 'fee' | 'status'> & Entity

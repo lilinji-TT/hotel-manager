@@ -8,7 +8,7 @@ import Badge from '@mui/material/Badge'
 import Container from '@mui/material/Container'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import NotificationsIcon from '@mui/icons-material/Notifications'
+import LogoutIcon from '@mui/icons-material/Logout'
 import { MainListItems, SecondaryListItems } from './navItems'
 import { Route, Routes } from 'react-router-dom'
 import ManagePage from './manage/manage'
@@ -109,8 +109,8 @@ const DashboardContent: React.FC = () => {
 							酒店易管家
 						</Typography>
 						<IconButton color='inherit'>
-							<Badge badgeContent={4} color='secondary'>
-								<NotificationsIcon />
+							<Badge color='secondary'>
+								<LogoutIcon />
 							</Badge>
 						</IconButton>
 					</Toolbar>
@@ -146,7 +146,7 @@ const DashboardContent: React.FC = () => {
 					}}
 				>
 					<Toolbar />
-					<Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
+					<Container maxWidth='xl' sx={{ mt: 2, mb: 2 }}>
 						<Routes>
 							<Route path='/chart' element={<ChartPage />} />
 							{userState.role === Role.ADMIN ? (

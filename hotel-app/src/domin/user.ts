@@ -8,7 +8,7 @@ export enum Role {
 export interface User extends Entity {
 	userName: string
 	realName: string
-	password: string
+	password?: string
 	role: Role
 	isActive: boolean
 	activationCode: string
