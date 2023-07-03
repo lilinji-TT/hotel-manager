@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
 import {
 	Box,
+	Checkbox,
+	Paper,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
 	TablePagination,
-	TableRow,
-	Paper,
-	Checkbox
+	TableRow
 } from '@mui/material'
+import React, { useState } from 'react'
+import { Id } from '../../../domin/Entity'
+import { Order, TableListProps } from '../../../domin/Table'
 import TableListHead from './tableListHead'
 import TableListToolbar from './tableListToolbar'
-import { Order, TableListProps } from '../../../domin/Table'
-import { Id } from '../../../domin/Entity'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
 		return -1
@@ -24,9 +24,11 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 	return 0
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getComparator<Key extends keyof any>(
 	order: Order,
 	orderBy: Key
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): (a: { [key in Key]: any }, b: { [key in Key]: any }) => number {
 	return order === 'desc'
 		? (a, b) => descendingComparator(a, b, orderBy)
@@ -171,9 +173,9 @@ const TableList = <T extends { _id: Id }>(props: TableListProps<T>) => {
 													</TableCell>
 												)
 											}
-											if (['checkInDate', 'checkOutDate'].includes(cell.id)) {
-												return <TableCell key={cell.id}>{row[cell.id].toDateString()}</TableCell>
-											}
+											// if (['checkInDate', 'checkOutDate'].includes(cell.id)) {
+											// 	return <TableCell key={cell.id}>{row[cell.id].toDateString()}</TableCell>
+											// }
 											return <TableCell key={cell.id}>{row[cell.id]}</TableCell>
 										})}
 									</TableRow>
