@@ -1,17 +1,20 @@
-import * as React from 'react'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import TextField from '@mui/material/TextField'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
-import Typography from '@mui/material/Typography'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import Container from '@mui/material/Container'
+import CssBaseline from '@mui/material/CssBaseline'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Grid from '@mui/material/Grid'
+import Link from '@mui/material/Link'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { registerMember } from '../../api'
+import { useDialog } from '../../hooks/useDialog'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Copyright(props: any) {
@@ -30,14 +33,29 @@ function Copyright(props: any) {
 const theme = createTheme()
 
 export default function SignUp() {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const { showMessage, Dialog } = useDialog()
+	const navigate = useNavigate()
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const data = new FormData(event.currentTarget)
-		// eslint-disable-next-line no-console
-		console.log({
-			email: data.get('email'),
-			password: data.get('password')
-		})
+
+		const userName = data.get('userName')
+		const password = data.get('passWord')
+		const activationCode = data.get('activationCode')
+		const confirmPassword = data.get('confirmPassword')
+		if (password !== confirmPassword) {
+			showMessage({ content: '密码不一致', duration: 3000, type: 'warning' })
+			return
+		}
+		const {
+			data: { msg, code }
+		} = await registerMember(userName, password, activationCode)
+		if (code === 200) {
+			showMessage({ content: msg, duration: 3000, type: 'success' })
+			navigate('/login')
+		} else {
+			showMessage({ content: msg, duration: 3000, type: 'error' })
+		}
 	}
 
 	return (
@@ -60,43 +78,47 @@ export default function SignUp() {
 					</Typography>
 					<Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 						<Grid container spacing={2}>
-							<Grid item xs={12} sm={6}>
+							<Grid item xs={12}>
 								<TextField
 									autoComplete='given-name'
-									name='firstName'
+									name='userName'
 									required
 									fullWidth
-									id='firstName'
-									label='姓'
+									id='userName'
+									label='用户名'
 									autoFocus
 								/>
 							</Grid>
-							<Grid item xs={12} sm={6}>
-								<TextField required fullWidth id='lastName' label='名' name='lastName' autoComplete='family-name' />
-							</Grid>
-							<Grid item xs={12}>
-								<TextField required fullWidth id='email' label='邮箱' name='email' autoComplete='email' />
-							</Grid>
 							<Grid item xs={12}>
 								<TextField
 									required
 									fullWidth
-									name='password'
-									label='密码'
-									type='password'
-									id='password'
-									autoComplete='new-password'
+									id='activationCode'
+									label='激活码'
+									name='activationCode'
+									autoComplete='activationCode'
 								/>
 							</Grid>
 							<Grid item xs={12}>
 								<TextField
 									required
 									fullWidth
-									name='password'
+									name='passWord'
+									label='密码'
+									type='password'
+									id='passWord'
+									autoComplete='new-passWord'
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									required
+									fullWidth
+									name='confirmPassword'
 									label='确认密码'
 									type='password'
-									id='password'
-									autoComplete='new-password'
+									id='confirmPassword'
+									autoComplete='confirmPassword'
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -119,6 +141,7 @@ export default function SignUp() {
 					</Box>
 				</Box>
 				<Copyright sx={{ mt: 5 }} />
+				<Dialog />
 			</Container>
 		</ThemeProvider>
 	)
