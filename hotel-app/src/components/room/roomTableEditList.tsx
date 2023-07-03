@@ -4,6 +4,7 @@ import { Button, DialogActions, DialogContent, Box, TextField, MenuItem } from '
 import { useContext, useState } from 'react'
 import { RoomContext } from '../../provider/RoomProvider'
 import { updateRoom, addRoom } from '../../api'
+import { RoomTypeFormat } from '../../utils/utils'
 
 interface RoomTableListProps {
 	open: boolean
@@ -74,7 +75,7 @@ const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
 									label='房间类型'
 									name='type'
 									onChange={handleChange}
-									defaultValue={selectedItem.type}
+									defaultValue={RoomTypeFormat(selectedItem.type)}
 								>
 									{Object.values(RoomType).map((type, index) => (
 										<MenuItem key={`${type}_${index}`} value={type}>
@@ -132,7 +133,7 @@ const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
 								>
 									{Object.values(RoomType).map((type, index) => (
 										<MenuItem key={`${type}_${index}`} value={type}>
-											{type}
+											{RoomTypeFormat(type)}
 										</MenuItem>
 									))}
 								</TextField>

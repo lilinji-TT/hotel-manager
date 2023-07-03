@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react'
 import { RecordContext } from '../../provider/RecordProvider'
 import { calculateOrderFee, finishOrder } from '../../api'
 import { RoomContext } from '../../provider/RoomProvider'
+import { RoomTypeFormat } from '../../utils/utils'
 
 interface ManageTableEditListProps {
 	open: boolean
@@ -73,7 +74,7 @@ const ManageTableEditList: React.FC<ManageTableEditListProps> = (props) => {
 								<TextField
 									id='outlined-type-required'
 									label='房间类型'
-									defaultValue={selectedItem.type}
+									defaultValue={RoomTypeFormat(selectedItem.type)}
 									onChange={handleChange}
 								/>
 							</div>

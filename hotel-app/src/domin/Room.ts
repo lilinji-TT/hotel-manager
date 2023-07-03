@@ -4,7 +4,6 @@ export enum RoomType {
 	NONE = 'NONE',
 	SINGLE = 'SINGLE_ROOM',
 	DOUNLE = 'DOUBLE_ROOM',
-	TWIN = 'TWIN_ROOM',
 	DELUXE = 'DELUXE_ROOM'
 }
 

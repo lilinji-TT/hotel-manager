@@ -173,9 +173,9 @@ const TableList = <T extends { _id: Id }>(props: TableListProps<T>) => {
 													</TableCell>
 												)
 											}
-											// if (['checkInDate', 'checkOutDate'].includes(cell.id)) {
-											// 	return <TableCell key={cell.id}>{row[cell.id].toDateString()}</TableCell>
-											// }
+											if (['checkInDate', 'checkOutDate'].includes(cell.id)) {
+												return <TableCell key={cell.id}>{row[cell.id].toDateString()}</TableCell>
+											}
 											return <TableCell key={cell.id}>{row[cell.id]}</TableCell>
 										})}
 									</TableRow>

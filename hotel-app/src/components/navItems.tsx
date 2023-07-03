@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import DashboardIcon from '@mui/icons-material/Dashboard'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import HomeSharpIcon from '@mui/icons-material/HomeSharp'
 import ManageHistorySharpIcon from '@mui/icons-material/ManageHistorySharp'
@@ -15,14 +14,6 @@ export const MainListItems: React.FC = () => {
 	const { userState } = useContext(UserContext)
 	return (
 		<React.Fragment>
-			<NavLink to={'/chart'} className={'text-decoration-none text-reset border-0'}>
-				<ListItemButton>
-					<ListItemIcon>
-						<DashboardIcon />
-					</ListItemIcon>
-					<ListItemText primary='数据信息' />
-				</ListItemButton>
-			</NavLink>
 			{userState.role === Role.ADMIN && (
 				<NavLink to={'/users'} className={'text-decoration-none text-reset border-0'}>
 					<ListItemButton>

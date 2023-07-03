@@ -12,7 +12,6 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { MainListItems, SecondaryListItems } from './navItems'
 import { Route, Routes } from 'react-router-dom'
 import ManagePage from './manage/manage'
-import ChartPage from './chart/chart'
 import RecordPage from './record/record'
 import UsersPage from './users/users'
 import RoomPage from './room/room'
@@ -148,7 +147,6 @@ const DashboardContent: React.FC = () => {
 					<Toolbar />
 					<Container maxWidth='xl' sx={{ mt: 2, mb: 2 }}>
 						<Routes>
-							<Route path='/chart' element={<ChartPage />} />
 							{userState.role === Role.ADMIN ? (
 								<Route path='/users' element={<UsersPage />} />
 							) : (

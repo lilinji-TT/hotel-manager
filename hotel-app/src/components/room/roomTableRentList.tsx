@@ -5,6 +5,7 @@ import { useContext, useState } from 'react'
 import { addOrder } from '../../api'
 import { UserContext } from '../../provider/UserProvider'
 import { RoomContext } from '../../provider/RoomProvider'
+import { RoomStatusFormat, RoomTypeFormat } from '../../utils/utils'
 
 interface RoomTableRentListProps {
 	open: boolean
@@ -70,7 +71,7 @@ const RoomTableRentList: React.FC<RoomTableRentListProps> = (props) => {
 									InputProps={{
 										readOnly: true
 									}}
-									defaultValue={selectedItem.type}
+									defaultValue={RoomTypeFormat(selectedItem.type)}
 								/>
 							</div>
 							<div>
@@ -88,7 +89,7 @@ const RoomTableRentList: React.FC<RoomTableRentListProps> = (props) => {
 									InputProps={{
 										readOnly: true
 									}}
-									defaultValue={selectedItem.status}
+									defaultValue={RoomStatusFormat(selectedItem.status)}
 								/>
 							</div>
 							<div className='p-2'>客户信息</div>
