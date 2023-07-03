@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import * as React from 'react'
+import { addOrder } from '../api'
 import { Record, RecordStatus } from '../domin/Record'
 import { Room, RoomStatus } from '../domin/Room'
 import { RecordContext } from '../provider/RecordProvider'
@@ -40,6 +41,16 @@ export default function useAdminRoomFormDialog() {
 			}
 			recordDispatch({ type: 'SET_RECORD_STATE', payload: recordData })
 			setOpen(false)
+
+			addOrder(
+				singleRoom._id,
+				singleRoom.type,
+				singleRoom.number,
+				record.customName,
+				record.idCard,
+				record.phone,
+				record.handlerName
+			)
 		}
 		return (
 			<Dialog open={open} onClose={() => setOpen(false)}>

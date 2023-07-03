@@ -1,5 +1,6 @@
 import { Button, Table } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getOngoingOrders } from '../../api'
 import { RecordContext } from '../../provider/RecordProvider'
 import { RoomContext } from '../../provider/RoomProvider'
 const Manage: React.FC = () => {
@@ -11,6 +12,8 @@ const Manage: React.FC = () => {
 			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee: 100 }
 		})
 		roomDispatch({ type: 'UPDATE_ROOM_STATE', payload: record.number })
+		// const {} = record
+		// finishOrder()
 	}
 	const Switch = ({ record }) => {
 		return (
@@ -30,6 +33,17 @@ const Manage: React.FC = () => {
 			</>
 		)
 	}
+	useEffect(() => {
+		const fetchRecordList = async () => {
+			const {
+				data: { data }
+			} = await getOngoingOrders()
+
+			recordDispatch({ type: 'SET_RECORD_LIST', payload: data })
+		}
+		fetchRecordList()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 	return (
 		<>
 			<Table

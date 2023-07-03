@@ -1,8 +1,9 @@
 import { Table } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
+import { getHistoryOrders } from '../../api'
 import { RecordContext } from '../../provider/RecordProvider'
 const Record: React.FC = () => {
-	const { recordState } = useContext(RecordContext)
+	const { recordState, recordDispatch } = useContext(RecordContext)
 	const Switch = ({ record }) => {
 		return (
 			<>
@@ -18,6 +19,17 @@ const Record: React.FC = () => {
 			</>
 		)
 	}
+	const fetchHistoryRecord = async () => {
+		const {
+			data: { data }
+		} = await getHistoryOrders()
+
+		recordDispatch({ type: 'SET_HISTORY_RECORD_LIST', payload: data })
+	}
+	useEffect(() => {
+		fetchHistoryRecord()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 	return (
 		<>
 			<Table

@@ -1,6 +1,6 @@
 import { Box, Button, Table } from '@mui/material'
 import { useContext, useEffect } from 'react'
-import { getRoomList } from '../../api'
+import { addRoom, deleteRoom, getRoomList, updateRoom } from '../../api'
 import type { Room } from '../../domin/Room'
 import { RoomStatus, RoomType } from '../../domin/Room'
 import { Role } from '../../domin/User'
@@ -17,20 +17,22 @@ export const RoomListPage: React.FC<RoomListProps> = () => {
 	const { AdminFormDialog, open, get } = useAdminRoomFormDialog()
 	const { EmployeeFormDialog, open: handleOpen, get: handleGet } = useEmployeeRoomFormDialog()
 
-	const handleDelete = (_id: string) => {
+	const handleDelete = async (_id: string) => {
 		roomDispatch({ type: 'DELETE_SINGLE_ROOM', payload: _id })
+		await deleteRoom(_id)
 	}
-	const handleAdd = () => {
+	const handleAdd = async () => {
 		roomDispatch({
 			type: 'ADD_SINGLE_ROOM',
 			payload: {
 				_id: `${Date.now()}`,
-				number: `${Date.now()}`,
+				number: '001',
 				price: 100,
 				status: RoomStatus.AVAILABLE,
 				type: RoomType.SINGLE
 			}
 		})
+		await addRoom(RoomType.SINGLE, `001`, 100)
 	}
 
 	const handleEdit = (room: Room) => {
@@ -45,6 +47,8 @@ export const RoomListPage: React.FC<RoomListProps> = () => {
 
 	const handleSave = (room, tempRoom) => {
 		roomDispatch({ type: 'SET_ROOM_STATE', payload: tempRoom })
+		const { number, price, type, _id } = tempRoom
+		updateRoom(_id, type, number, price)
 	}
 
 	const Room = ({ room }) => {
@@ -83,21 +87,20 @@ export const RoomListPage: React.FC<RoomListProps> = () => {
 			</>
 		)
 	}
+	const fetchData = async () => {
+		try {
+			// 执行异步操作
+			const {
+				data: { data }
+			} = await getRoomList()
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				// 执行异步操作
-				const {
-					data: { data }
-				} = await getRoomList()
-
-				// 处理获取到的数据
-				roomDispatch({ type: 'SET_ROOM_LIST', payload: data })
-			} catch (error) {
-				// 处理错误
-			}
+			// 处理获取到的数据
+			roomDispatch({ type: 'SET_ROOM_LIST', payload: data })
+		} catch (error) {
+			// 处理错误
 		}
+	}
+	useEffect(() => {
 		fetchData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -131,7 +134,7 @@ export const RoomListPage: React.FC<RoomListProps> = () => {
 				<tbody>
 					{roomState.map((room) => {
 						return (
-							<tr key={room.number}>
+							<tr key={room._id}>
 								<Room room={room} />
 							</tr>
 						)

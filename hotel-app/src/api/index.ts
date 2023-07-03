@@ -32,7 +32,7 @@ export const addRoom = (type, number, price) => {
 
 // 删除房间
 export const deleteRoom = (id) => {
-	return del(`/room/delete${id}/`)
+	return del(`/room/delete/${id}/`)
 }
 
 // 修改房间
