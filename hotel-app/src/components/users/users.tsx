@@ -1,12 +1,12 @@
-import { UserHeadCell } from '../../domin/Headline'
-import TableList from '../common/tableList/tableList'
-import { UserRows as rows } from '../../mock/tableDate'
-import { useMemo, useState } from 'react'
-import { User } from '../../domin/User'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { IconButton, Stack, Tooltip } from '@mui/material'
-import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { useEffect, useMemo, useState } from 'react'
+import { addGroup, deleteGroup, getGroupList, updateGroup } from '../../api'
+import { UserHeadCell } from '../../domin/Headline'
+import { User } from '../../domin/User'
+import TableList from '../common/tableList/tableList'
 import UsersTableEditList from './usersTableEditList'
 const headCells: UserHeadCell[] = [
 	{
@@ -42,7 +42,8 @@ const headCells: UserHeadCell[] = [
 ]
 const RecordPage: React.FC = () => {
 	const [selected, setSelected] = useState<string[]>([])
-
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const [userList, setUserList] = useState<any[]>([])
 	const handleSelectChange = (selectValue: string[]) => {
 		setSelected(selectValue)
 	}
@@ -54,29 +55,64 @@ const RecordPage: React.FC = () => {
 
 	const [open, setOpen] = useState(false)
 
+	const fetchUserList = async () => {
+		const {
+			data: { data }
+		} = await getGroupList()
+		setUserList([...data])
+	}
 	const handleClickOpen = () => {
 		setOpen(true)
 	}
+
+	const handleAdd = async (realName: string) => {
+		setOpen(false)
+		setSelected([])
+		await addGroup(realName)
+		await fetchUserList()
+	}
+
+	const handleUpdate = async (id: string, newRealName: string) => {
+		setOpen(false)
+		setSelected([])
+		await updateGroup(id, newRealName)
+		await fetchUserList()
+	}
+
+	const handleDelete = async (id: string) => {
+		await deleteGroup(id)
+		await fetchUserList()
+		setSelected([])
+	}
+
 	const handleClose = () => {
 		setOpen(false)
 	}
-
 	const selectedItem = useMemo(() => {
-		return rows.filter((item) => item._id === selected[0])
-	}, [selected])
+		return userList.filter((item) => item._id === selected[0])
+	}, [selected, userList])
 
+	useEffect(() => {
+		fetchUserList()
+	}, [])
 	return (
 		<TableList<User>
 			title='员工列表'
 			headCells={headCells}
-			rows={rows}
+			rows={userList}
 			selectBox={true}
 			selected={selected}
 			search={search}
 			handleSelectChange={handleSelectChange}
 			handleSearchChange={handleSearchChange}
 		>
-			<UsersTableEditList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
+			<UsersTableEditList
+				open={open}
+				handleClose={handleClose}
+				handleUpdate={handleUpdate}
+				handleAdd={handleAdd}
+				selectedItem={selectedItem[0]}
+			/>
 			{selected.length === 0 && (
 				<Tooltip title='添加'>
 					<IconButton onClick={() => handleClickOpen()}>
@@ -96,7 +132,7 @@ const RecordPage: React.FC = () => {
 					)}
 
 					<Tooltip title='删除'>
-						<IconButton>
+						<IconButton onClick={() => handleDelete(selectedItem[0]._id)}>
 							<DeleteIcon />
 						</IconButton>
 					</Tooltip>

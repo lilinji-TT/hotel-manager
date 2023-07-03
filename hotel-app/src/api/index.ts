@@ -11,13 +11,13 @@ export const addGroup = (realName) => {
 }
 
 // 删除员工
-export const deleteGroup = (id) => {
-	return del(`/group/delete/${id}/`)
+export const deleteGroup = (_id) => {
+	return del(`/group/delete/${_id}/`)
 }
 
 // 修改员工
-export const updateGroup = (id, newRealName) => {
-	return patch(`/group/update/${id}/`, { newRealName })
+export const updateGroup = (_id, newRealName) => {
+	return patch(`/group/update/${_id}/`, { newRealName })
 }
 
 // 获取房间列表
@@ -26,7 +26,7 @@ export const getRoomList = async () => {
 }
 
 // 新增房间
-export const addRoom = (type, number, price) => {
+export const addRoom = (type: string, number, price) => {
 	return post('/room/add/', { type, number, price })
 }
 
