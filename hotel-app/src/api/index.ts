@@ -76,11 +76,11 @@ export const addOrder = (roomId, type, number, customName, idCard, phone, handle
 }
 
 // 计算费用
-export const calculateOrderFee = (id) => {
-	return post('/order/cal/', { id })
+export const calculateOrderFee = (_id) => {
+	return post('/order/cal/', { _id })
 }
 
 // 结束订单
-export const finishOrder = (id) => {
-	return patch(`/order/finish/${id}/`)
+export const finishOrder = (id, roomId, fee) => {
+	return patch(`/order/finish/${id}/`, { roomId, fee })
 }

@@ -1,19 +1,20 @@
 import { Button, Table } from '@mui/material'
 import React, { useEffect } from 'react'
-import { getOngoingOrders } from '../../api'
+import { calculateOrderFee, finishOrder, getOngoingOrders } from '../../api'
 import { RecordContext } from '../../provider/RecordProvider'
 import { RoomContext } from '../../provider/RoomProvider'
 const Manage: React.FC = () => {
 	const { recordState, recordDispatch } = React.useContext(RecordContext)
 	const { roomDispatch } = React.useContext(RoomContext)
-	const handleSettlement = (record) => {
+	const handleSettlement = async (record) => {
+		const { _id, roomId } = record
+		const { data: fee } = await calculateOrderFee(_id)
 		recordDispatch({
 			type: 'SET_HISTORY_RECORD_STATE',
-			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee: 100 }
+			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee }
 		})
 		roomDispatch({ type: 'UPDATE_ROOM_STATE', payload: record.number })
-		// const {} = record
-		// finishOrder()
+		await finishOrder(_id, roomId, fee)
 	}
 	const Switch = ({ record }) => {
 		return (

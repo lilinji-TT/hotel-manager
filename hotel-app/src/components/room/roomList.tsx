@@ -45,10 +45,10 @@ export const RoomListPage: React.FC<RoomListProps> = () => {
 		}
 	}
 
-	const handleSave = (room, tempRoom) => {
+	const handleSave = async (room, tempRoom) => {
 		roomDispatch({ type: 'SET_ROOM_STATE', payload: tempRoom })
 		const { number, price, type, _id } = tempRoom
-		updateRoom(_id, type, number, price)
+		await updateRoom(_id, type, number, price)
 	}
 
 	const Room = ({ room }) => {
@@ -100,6 +100,7 @@ export const RoomListPage: React.FC<RoomListProps> = () => {
 			// 处理错误
 		}
 	}
+
 	useEffect(() => {
 		fetchData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps

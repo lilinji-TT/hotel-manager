@@ -23,26 +23,14 @@ export default function useAdminRoomFormDialog() {
 			} = e
 			setRecord((preRecord) => ({ ...preRecord, [name]: value }))
 		}
-		const handleFormClose = () => {
-			handleSave(singleRoom, { ...singleRoom, status: RoomStatus.OCCUPIED })
-			const recordData = {
-				_id: record._id ?? '',
-				roomId: singleRoom._id ?? '',
-				type: singleRoom.type,
-				number: singleRoom.number,
-				customName: record.customName,
-				idCard: record.idCard,
-				phone: record.phone,
-				checkInDate: record.checkInDate ?? new Date().toISOString().slice(0, 10),
-				checkOutDate: new Date(''),
-				fee: 0,
-				status: RecordStatus.PROCESSING,
-				handlerName: record.handlerName
-			}
-			recordDispatch({ type: 'SET_RECORD_STATE', payload: recordData })
+		const handleFormClose = async () => {
 			setOpen(false)
-
-			addOrder(
+			handleSave(singleRoom, { ...singleRoom, status: RoomStatus.OCCUPIED })
+			const {
+				data: {
+					data: { _id }
+				}
+			} = await addOrder(
 				singleRoom._id,
 				singleRoom.type,
 				singleRoom.number,
@@ -51,6 +39,21 @@ export default function useAdminRoomFormDialog() {
 				record.phone,
 				record.handlerName
 			)
+			const recordData = {
+				_id: _id ?? '',
+				roomId: singleRoom._id ?? '',
+				type: singleRoom.type,
+				number: singleRoom.number,
+				customName: record.customName,
+				idCard: record.idCard,
+				phone: record.phone,
+				checkInDate: record.checkInDate ?? new Date().toISOString().slice(0, 10),
+				checkOutDate: new Date(''),
+				fee: singleRoom.price,
+				status: RecordStatus.PROCESSING,
+				handlerName: record.handlerName
+			}
+			recordDispatch({ type: 'SET_RECORD_STATE', payload: recordData })
 		}
 		return (
 			<Dialog open={open} onClose={() => setOpen(false)}>
