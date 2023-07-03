@@ -13,7 +13,9 @@ import Typography from '@mui/material/Typography'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import * as React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { login } from '../../api'
+import { useDialog } from '../../hooks/useDialog'
 import { UserContext } from '../../provider/UserProvider'
 import { TextWithValidatField } from './validateField'
 
@@ -38,7 +40,8 @@ export default function SignInSide() {
 	const [password, setPassword] = useState('')
 	const [open, setOpen] = useState(false)
 	const [loading, setLoading] = useState(false)
-
+	const { showMessage, Dialog } = useDialog()
+	const navigate = useNavigate()
 	const { userDispatch } = React.useContext(UserContext)
 
 	const handleClose = (reason) => {
@@ -54,11 +57,21 @@ export default function SignInSide() {
 			if (!username.trim() || !password.trim()) return
 			const login_data = {
 				userName: username.trim(),
-				password: password.trim()
+				passWord: password.trim()
 			}
 			setLoading(true)
-			const res = await login(login_data, '11')
-			!res && (userDispatch({ type: 'SET_LOGIN_STATE' }), setLoading(false))
+			const {
+				data: { msg, code }
+			} = await login(login_data.userName, login_data.passWord)
+			if (code === 200) {
+				showMessage({ content: msg, duration: 3000, type: 'success' })
+				userDispatch({ type: 'SET_LOGIN_STATE' })
+				navigate('/*')
+				setLoading(false)
+			} else {
+				showMessage({ content: msg, duration: 3000, type: 'success' })
+				setLoading(false)
+			}
 		} catch (err) {
 			//...
 			setOpen(true)
@@ -169,6 +182,7 @@ export default function SignInSide() {
 					账号或者密码错误
 				</Alert>
 			</Snackbar>
+			<Dialog />
 		</ThemeProvider>
 	)
 }
