@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined'
+import AddBusinessIcon from '@mui/icons-material/AddBusiness'
 import Stack from '@mui/material/Stack/Stack'
 import { UserContext } from '../../provider/UserProvider'
 import { Role } from '../../domin/User'
@@ -91,6 +92,7 @@ const RoomPage: React.FC = () => {
 				handleSelectChange={handleSelectChange}
 				handleSearchChange={handleSearchChange}
 			>
+				<RoomTableEditList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
 				{selected.length > 0 && (
 					<Stack spacing={1} direction='row'>
 						{selected.length === 1 && userState.role === Role.ADMIN && (
@@ -100,7 +102,6 @@ const RoomPage: React.FC = () => {
 										<ModeEditIcon />
 									</IconButton>
 								</Tooltip>
-								<RoomTableEditList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
 							</>
 						)}
 						{selected.length === 1 && userState.role === Role.REGULAR && (
@@ -119,6 +120,15 @@ const RoomPage: React.FC = () => {
 							</IconButton>
 						</Tooltip>
 					</Stack>
+				)}
+				{selected.length === 0 && userState.role === Role.ADMIN && (
+					<>
+						<Tooltip title='添加'>
+							<IconButton onClick={() => handleClickOpen()}>
+								<AddBusinessIcon />
+							</IconButton>
+						</Tooltip>
+					</>
 				)}
 			</TableList>
 		</>
