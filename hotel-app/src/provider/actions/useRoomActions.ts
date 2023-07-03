@@ -35,7 +35,7 @@ export const roomActions = {
 		ss.set('ROOM_STATE', room_state)
 		return room_state
 	},
-	setRoomList: (state, action) => {
+	setRoomList: (_state, action) => {
 		return action.payload
 	}
 }

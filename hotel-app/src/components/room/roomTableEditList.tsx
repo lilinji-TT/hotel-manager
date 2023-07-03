@@ -34,7 +34,7 @@ const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
 								<TextField required id='outlined-price-required' label='价格' defaultValue={selectedItem.price} />
 							</div>
 							<div>
-								<TextField id='outlined-select-currency' select label='状态' defaultValue={RoomStatus.AVAILABLE}>
+								<TextField id='outlined-select-currency' select label='状态' defaultValue={selectedItem.status}>
 									{Object.values(RoomStatus).map((status, index) => (
 										<MenuItem key={`${status}_${index}`} value={status}>
 											{status}

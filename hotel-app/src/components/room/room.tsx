@@ -1,8 +1,7 @@
 import { RoomHeadCell } from '../../domin/Headline'
 import TableList from '../common/tableList/tableList'
 import { Room } from '../../domin/Room'
-import { RoomRows as rows } from '../../mock/tableDate'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import Tooltip from '@mui/material/Tooltip/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -13,6 +12,8 @@ import { UserContext } from '../../provider/UserProvider'
 import { Role } from '../../domin/User'
 import RoomTableEditList from './roomTableEditList'
 import RoomTableRentList from './roomTableRentList'
+import { RoomContext } from '../../provider/RoomProvider'
+import { getRoomList } from '../../api'
 const headCells: RoomHeadCell[] = [
 	{
 		id: 'number',
@@ -40,7 +41,10 @@ const headCells: RoomHeadCell[] = [
 	}
 ]
 const RoomPage: React.FC = () => {
+	const { userState } = useContext(UserContext)
+	const { roomState, roomDispatch } = useContext(RoomContext)
 	const [selected, setSelected] = useState<string[]>([])
+	const [search, setSearch] = useState<string>('')
 	const [open, setOpen] = useState(false)
 
 	const handleClickOpen = () => {
@@ -49,26 +53,38 @@ const RoomPage: React.FC = () => {
 	const handleClose = () => {
 		setOpen(false)
 	}
-	const { userState } = useContext(UserContext)
+
 	const handleSelectChange = (selectValue: string[]) => {
 		setSelected(selectValue)
 	}
 
-	const [search, setSearch] = useState<string>('')
 	const handleSearchChange = (search: string) => {
 		setSearch(search)
 	}
 
 	const selectedItem = useMemo(() => {
-		return rows.filter((item) => item._id === selected[0])
-	}, [selected])
+		return roomState.filter((item) => item._id === selected[0])
+	}, [roomState, selected])
+
+	const fetchData = async () => {
+		const {
+			data: { data }
+		} = await getRoomList()
+
+		roomDispatch({ type: 'SET_ROOM_LIST', payload: data })
+	}
+
+	useEffect(() => {
+		fetchData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return (
 		<>
 			<TableList<Room>
 				title='房间管理'
 				headCells={headCells}
-				rows={rows}
+				rows={roomState}
 				selectBox={true}
 				selected={selected}
 				search={search}

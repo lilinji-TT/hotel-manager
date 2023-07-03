@@ -1,13 +1,13 @@
 import { ManageHeadCell } from '../../domin/Headline'
 import TableList from '../common/tableList/tableList'
 import { Manage } from '../../domin/Record'
-import { RecordRows as rows } from '../../mock/tableDate'
-import { useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { IconButton, Stack, Tooltip } from '@mui/material'
-import { calculateOrderFee, finishOrder, getOngoingOrders } from '../../api'
+import { getOngoingOrders } from '../../api'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ManageTableEditList from './manageTableEditList'
+import { RecordContext } from '../../provider/RecordProvider'
 
 const headCells: ManageHeadCell[] = [
 	{
@@ -52,39 +52,51 @@ const headCells: ManageHeadCell[] = [
 		disablePadding: false,
 		label: '处理人'
 	}
+]
+
+const ManagePage: React.FC = () => {
+	const { recordState, recordDispatch } = useContext(RecordContext)
+
+	const [selected, setSelected] = useState<string[]>([])
+	const [search, setSearch] = useState<string>('')
+	const [open, setOpen] = useState(false)
+
+	const handleSelectChange = (selectValue: string[]) => {
+		setSelected(selectValue)
+	}
+
+	const handleSearchChange = (search: string) => {
+		setSearch(search)
+	}
+
+	const handleClickOpen = () => {
+		setOpen(true)
+	}
+	const handleClose = () => {
+		setOpen(false)
+	}
 
 	const selectedItem = useMemo(() => {
-		return rows.filter((item) => item._id === selected[0])
-	}, [selected])
-	const { recordState, recordDispatch } = React.useContext(RecordContext)
-	const { roomDispatch } = React.useContext(RoomContext)
+		return recordState.records.filter((item) => item._id === selected[0])
+	}, [recordState.records, selected])
 
-	const handleSettlement = async (record) => {
-		const { _id, roomId } = record
-		const { data: fee } = await calculateOrderFee(_id)
-		recordDispatch({
-			type: 'SET_HISTORY_RECORD_STATE',
-			payload: { ...record, checkOutDate: new Date().toISOString().slice(0, 10), fee }
-		})
-		roomDispatch({ type: 'UPDATE_ROOM_STATE', payload: record.number })
-		await finishOrder(_id, roomId, fee)
+	const fetchRecordList = async () => {
+		const {
+			data: { data }
+		} = await getOngoingOrders()
+		recordDispatch({ type: 'SET_RECORD_LIST', payload: data })
+	}
 
 	useEffect(() => {
-		const fetchRecordList = async () => {
-			const {
-				data: { data }
-			} = await getOngoingOrders()
-
-			recordDispatch({ type: 'SET_RECORD_LIST', payload: data })
-		}
 		fetchRecordList()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
 	return (
 		<TableList<Manage>
 			title='入住管理'
 			headCells={headCells}
-			rows={rows}
+			rows={recordState.records}
 			selectBox={true}
 			selected={selected}
 			search={search}

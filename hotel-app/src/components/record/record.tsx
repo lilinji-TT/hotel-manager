@@ -1,9 +1,9 @@
 import { RecordHeadCell } from '../../domin/Headline'
 import TableList from '../common/tableList/tableList'
 import { Record } from '../../domin/Record'
-import { RecordRows as rows } from '../../mock/tableDate'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { getHistoryOrders } from '../../api'
+import { RecordContext } from '../../provider/RecordProvider'
 
 const headCells: RecordHeadCell[] = [
 	{
@@ -86,15 +86,17 @@ const RecordPage: React.FC = () => {
 
 		recordDispatch({ type: 'SET_HISTORY_RECORD_LIST', payload: data })
 	}
+
 	useEffect(() => {
 		fetchHistoryRecord()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
 	return (
 		<TableList<Record>
 			title='订单记录'
 			headCells={headCells}
-			rows={rows}
+			rows={recordState.historyRecords}
 			selectBox={false}
 			selected={selected}
 			search={search}
