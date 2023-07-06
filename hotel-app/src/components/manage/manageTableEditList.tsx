@@ -1,9 +1,9 @@
-import TableModel from '../../components/common/tableModel/tableModel'
-import { Button, DialogActions, DialogContent, Box, TextField } from '@mui/material'
-import { Manage } from '../../domin/Record'
+import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
-import { RecordContext } from '../../provider/RecordProvider'
 import { calculateOrderFee, finishOrder } from '../../api'
+import TableModel from '../../components/common/tableModel/tableModel'
+import { Manage } from '../../domin/Record'
+import { RecordContext } from '../../provider/RecordProvider'
 import { RoomContext } from '../../provider/RoomProvider'
 import { RoomTypeFormat } from '../../utils/utils'
 
@@ -11,10 +11,12 @@ interface ManageTableEditListProps {
 	open: boolean
 	handleClose: () => void
 	selectedItem: Manage
+
+	resetSeleted: () => void
 }
 
 const ManageTableEditList: React.FC<ManageTableEditListProps> = (props) => {
-	const { open, handleClose, selectedItem } = props
+	const { open, handleClose, selectedItem, resetSeleted } = props
 	const { recordDispatch } = useContext(RecordContext)
 	const { roomDispatch } = useContext(RoomContext)
 	const [manage, setManage] = useState<Manage>(selectedItem)
@@ -34,9 +36,10 @@ const ManageTableEditList: React.FC<ManageTableEditListProps> = (props) => {
 			payload: { ...manage, checkOutDate: new Date().toISOString().slice(0, 10), fee }
 		})
 		roomDispatch({ type: 'UPDATE_ROOM_STATE', payload: manage.number })
-
-		await finishOrder(_id, roomId, fee)
 		handleClose()
+		await finishOrder(_id, roomId, fee)
+		resetSeleted()
+		window.location.reload()
 	}
 
 	const calculateFee = async () => {
@@ -102,7 +105,7 @@ const ManageTableEditList: React.FC<ManageTableEditListProps> = (props) => {
 								<TextField
 									id='outlined-price-required'
 									label='入住时间'
-									defaultValue={selectedItem.checkInDate.toDateString()}
+									defaultValue={selectedItem.checkInDate}
 									onChange={handleChange}
 								/>
 							</div>

@@ -1,6 +1,6 @@
-import { Role } from '../domin/User'
 import { RecordStatus } from '../domin/Record'
-import { RoomType, RoomStatus } from '../domin/Room'
+import { RoomStatus, RoomType } from '../domin/Room'
+import { Role } from '../domin/User'
 export const isRoles = (role: Role, lookup: Role) => {
 	return role === lookup
 }
@@ -14,6 +14,14 @@ export const RecordFormat = (status: string) => {
 	}
 }
 
+export const RoleFormat = (role: string) => {
+	switch (role) {
+		case Role.ADMIN:
+			return '管理员'
+		case Role.REGULAR:
+			return '员工'
+	}
+}
 export const RoomTypeFormat = (type: string) => {
 	switch (type) {
 		case RoomType.SINGLE:
@@ -29,6 +37,19 @@ export const RoomTypeFormat = (type: string) => {
 
 export const RoomStatusFormat = (status: string) => {
 	switch (status) {
+		case RoomStatus.AVAILABLE:
+			return '空闲'
+		case RoomStatus.OCCUPIED:
+			return '租用中'
+	}
+}
+
+export const statusFormat = (status: string) => {
+	switch (status) {
+		case 'FINISHED':
+			return '完成'
+		case RecordStatus.PROCESSING:
+			return '进行中'
 		case RoomStatus.AVAILABLE:
 			return '空闲'
 		case RoomStatus.OCCUPIED:

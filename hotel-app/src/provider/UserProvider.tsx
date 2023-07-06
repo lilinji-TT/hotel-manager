@@ -5,14 +5,15 @@ import { userActions } from './actions/useUserAction.ts'
 
 export interface USER_STATE {
 	userState: UserStateWithAuth
-	userDispatch: React.Dispatch<{ type: string } | UserState>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	userDispatch: React.Dispatch<{ type: string; payload: any } | UserState>
 }
 
 const USER_STATE: UserStateWithAuth = {
 	_id: '',
 	userName: '',
 	realName: '',
-	role: Role.ADMIN,
+	role: Role.REGULAR,
 	isAuthenticated: false
 }
 

@@ -12,6 +12,7 @@ import {
 import React, { useState } from 'react'
 import { Id } from '../../../domin/Entity'
 import { Order, TableListProps } from '../../../domin/Table'
+import { RoleFormat, RoomTypeFormat, UserStatusFormat, statusFormat } from '../../../utils/utils'
 import TableListHead from './tableListHead'
 import TableListToolbar from './tableListToolbar'
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -173,8 +174,23 @@ const TableList = <T extends { _id: Id }>(props: TableListProps<T>) => {
 													</TableCell>
 												)
 											}
-											if (['checkInDate', 'checkOutDate'].includes(cell.id)) {
-												return <TableCell key={cell.id}>{row[cell.id].toDateString()}</TableCell>
+											// if (['checkInDate', 'checkOutDate'].includes(cell.id)) {
+											// 	return <TableCell key={cell.id}>{row[cell.id].toDateString()}</TableCell>
+											// }
+											if (cell.id === 'status') {
+												return <TableCell key={cell.id}>{statusFormat(row[cell.id])}</TableCell>
+											}
+
+											if (cell.id === 'type') {
+												return <TableCell key={cell.id}>{RoomTypeFormat(row[cell.id])}</TableCell>
+											}
+
+											if (cell.id === 'isActive') {
+												return <TableCell key={cell.id}>{UserStatusFormat(row[cell.id])}</TableCell>
+											}
+
+											if (cell.id === 'role') {
+												return <TableCell key={cell.id}>{RoleFormat(row[cell.id])}</TableCell>
 											}
 											return <TableCell key={cell.id}>{row[cell.id]}</TableCell>
 										})}

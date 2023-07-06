@@ -19,12 +19,12 @@ const App: React.FC = (): ReactElement => {
 	const authorizedRoutes = (
 		<Routes>
 			<Route path='/*' element={<DashBoardPage />} />
-			<Route path='/' element={<Navigate to='/chart' replace />} />
+			<Route path='/' element={<Navigate to='/record' replace />} />
 			<Route path='/login' element={<Navigate to='/' replace />} />
 		</Routes>
 	)
 	if (!userState) return <>出错了</>
-	return <Router>{!userState.isAuthenticated ? authorizedRoutes : unauthorizedRoutes}</Router>
+	return <Router>{userState.isAuthenticated ? authorizedRoutes : unauthorizedRoutes}</Router>
 }
 
 export default App

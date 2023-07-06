@@ -1,28 +1,28 @@
-import React, { useState, useContext } from 'react'
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import Box from '@mui/material/Box'
-import MuiDrawer from '@mui/material/Drawer'
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
-import Badge from '@mui/material/Badge'
-import Container from '@mui/material/Container'
-import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { MainListItems, SecondaryListItems } from './navItems'
-import { Route, Routes } from 'react-router-dom'
-import ManagePage from './manage/manage'
-import RecordPage from './record/record'
-import UsersPage from './users/users'
-import RoomPage from './room/room'
-import Toolbar from '@mui/material/Toolbar/Toolbar'
-import IconButton from '@mui/material/IconButton/IconButton'
-import Typography from '@mui/material/Typography/Typography'
+import MenuIcon from '@mui/icons-material/Menu'
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
+import Badge from '@mui/material/Badge'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider/Divider'
+import MuiDrawer from '@mui/material/Drawer'
+import IconButton from '@mui/material/IconButton/IconButton'
 import List from '@mui/material/List/List'
-import { UserContext } from '../provider/UserProvider'
+import Toolbar from '@mui/material/Toolbar/Toolbar'
+import Typography from '@mui/material/Typography/Typography'
+import { ThemeProvider, createTheme, styled } from '@mui/material/styles'
+import React, { useContext, useState } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import { Role } from '../domin/User'
-import { useDialog } from '../hooks/useDialog'
+import { UserContext } from '../provider/UserProvider'
+import { ss } from '../utils/storage'
+import ManagePage from './manage/manage'
+import { MainListItems, SecondaryListItems } from './navItems'
+import RecordPage from './record/record'
+import RoomPage from './room/room'
+import UsersPage from './users/users'
 
 interface AppBarProps extends MuiAppBarProps {
 	open?: boolean
@@ -76,12 +76,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const DashboardContent: React.FC = () => {
 	const [open, setOpen] = useState(true)
 	const { userState } = useContext(UserContext)
-	const { showMessage, Dialog } = useDialog()
 	const toggleDrawer = () => {
-		showMessage({ content: '成功！', duration: 3000, type: 'info' })
 		setOpen(!open)
 	}
 
+	const handlerLogOut = () => {
+		ss.clear()
+		window.location.reload()
+	}
 	return (
 		<ThemeProvider theme={mdTheme}>
 			<Box sx={{ display: 'flex' }}>
@@ -107,7 +109,7 @@ const DashboardContent: React.FC = () => {
 						<Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
 							酒店易管家
 						</Typography>
-						<IconButton color='inherit'>
+						<IconButton color='inherit' onClick={() => handlerLogOut()}>
 							<Badge color='secondary'>
 								<LogoutIcon />
 							</Badge>
@@ -158,7 +160,6 @@ const DashboardContent: React.FC = () => {
 					</Container>
 				</Box>
 			</Box>
-			<Dialog />
 		</ThemeProvider>
 	)
 }

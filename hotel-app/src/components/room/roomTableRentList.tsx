@@ -1,22 +1,23 @@
-import { Room } from '../../domin/Room'
-import TableModel from '../../components/common/tableModel/tableModel'
-import { Button, DialogActions, DialogContent, Box, TextField } from '@mui/material'
+import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/material'
 import { useContext, useState } from 'react'
 import { addOrder } from '../../api'
-import { UserContext } from '../../provider/UserProvider'
+import TableModel from '../../components/common/tableModel/tableModel'
+import { Room } from '../../domin/Room'
 import { RoomContext } from '../../provider/RoomProvider'
+import { UserContext } from '../../provider/UserProvider'
 import { RoomStatusFormat, RoomTypeFormat } from '../../utils/utils'
 
 interface RoomTableRentListProps {
 	open: boolean
 	handleClose: () => void
 	selectedItem: Room
+	resetSeleted: () => void
 }
 
 const RoomTableRentList: React.FC<RoomTableRentListProps> = (props) => {
 	const { userState } = useContext(UserContext)
 	const { roomDispatch } = useContext(RoomContext)
-	const { open, handleClose, selectedItem } = props
+	const { open, handleClose, selectedItem, resetSeleted } = props
 	const [rent, setRent] = useState<{ customName: string; phone: string; idCard: string } | object>({})
 	const handleChange = (e) => {
 		const {
@@ -39,6 +40,8 @@ const RoomTableRentList: React.FC<RoomTableRentListProps> = (props) => {
 			userState.realName
 		)
 		roomDispatch({ type: 'SET_ROOM_STATE', payload: data })
+		resetSeleted()
+		window.location.reload()
 		handleClose()
 	}
 

@@ -1,19 +1,21 @@
-import { Room, RoomType } from '../../domin/Room'
-import TableModel from '../../components/common/tableModel/tableModel'
-import { Button, DialogActions, DialogContent, Box, TextField, MenuItem } from '@mui/material'
+import { Box, Button, DialogActions, DialogContent, MenuItem, TextField } from '@mui/material'
 import { useContext, useState } from 'react'
+import { addRoom, updateRoom } from '../../api'
+import TableModel from '../../components/common/tableModel/tableModel'
+import { Room, RoomType } from '../../domin/Room'
 import { RoomContext } from '../../provider/RoomProvider'
-import { updateRoom, addRoom } from '../../api'
 import { RoomTypeFormat } from '../../utils/utils'
 
 interface RoomTableListProps {
 	open: boolean
 	handleClose: () => void
 	selectedItem?: Room
+
+	resetSeleted: () => void
 }
 
 const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
-	const { open, handleClose, selectedItem } = props
+	const { open, handleClose, selectedItem, resetSeleted } = props
 	const { roomDispatch } = useContext(RoomContext)
 	const [room, setRoom] = useState<Room | object>(selectedItem || {})
 	const handleChange = (e) => {
@@ -24,12 +26,18 @@ const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
 	}
 
 	const handleEdit = async () => {
-		if (Object.values(room).length > 0 && (room as Room).type && (room as Room).type !== RoomType.NONE) {
+		if (Object.values(room).length > 0 && (room as Room).type !== RoomType.NONE) {
 			if (selectedItem) {
 				const { _id, type, number, price } = room as Room
+				const roomData = {
+					_id: _id ?? selectedItem._id,
+					type: type ?? selectedItem.type,
+					number: number ?? selectedItem.number,
+					price: price ?? selectedItem.price
+				}
 				const {
 					data: { data }
-				} = await updateRoom(_id, type, number, price)
+				} = await updateRoom(roomData._id, roomData.type, roomData.number, roomData.price)
 				roomDispatch({ type: 'SET_ROOM_STATE', payload: data })
 			} else {
 				const { type, number, price } = room as Room
@@ -41,6 +49,8 @@ const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
 					payload: data
 				})
 			}
+			window.location.reload()
+			resetSeleted()
 			handleClose()
 		}
 	}
@@ -75,11 +85,11 @@ const RoomTableEditList: React.FC<RoomTableListProps> = (props) => {
 									label='房间类型'
 									name='type'
 									onChange={handleChange}
-									defaultValue={RoomTypeFormat(selectedItem.type)}
+									defaultValue={selectedItem.type}
 								>
 									{Object.values(RoomType).map((type, index) => (
 										<MenuItem key={`${type}_${index}`} value={type}>
-											{type}
+											{RoomTypeFormat(type)}
 										</MenuItem>
 									))}
 								</TextField>

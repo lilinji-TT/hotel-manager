@@ -61,12 +61,12 @@ export default function SignInSide() {
 			}
 			setLoading(true)
 			const {
-				data: { msg, code }
+				data: { msg, code, data }
 			} = await login(login_data.userName, login_data.passWord)
 			if (code === 200) {
 				showMessage({ content: msg, duration: 3000, type: 'success' })
-				userDispatch({ type: 'SET_LOGIN_STATE' })
-				navigate('/*')
+				userDispatch({ type: 'SET_LOGIN_STATE', payload: data })
+				navigate('/')
 				setLoading(false)
 			} else {
 				showMessage({ content: msg, duration: 3000, type: 'success' })

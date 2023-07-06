@@ -2,8 +2,8 @@ import { ss } from '../../utils/storage'
 export const roomActions = {
 	setRoomState: (state, action) => {
 		const room_state = state.map((room) => {
-			if (room._id === action.payload._id) {
-				return action.payload
+			if (room._id === +action.payload._id) {
+				return { ...action.payload, status: room.status }
 			}
 			return room
 		})

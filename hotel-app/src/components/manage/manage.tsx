@@ -1,13 +1,12 @@
-import { ManageHeadCell } from '../../domin/Headline'
-import TableList from '../common/tableList/tableList'
-import { Manage } from '../../domin/Record'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { IconButton, Stack, Tooltip } from '@mui/material'
-import { getOngoingOrders } from '../../api'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
-import DeleteIcon from '@mui/icons-material/Delete'
-import ManageTableEditList from './manageTableEditList'
+import { IconButton, Stack, Tooltip } from '@mui/material'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { getOngoingOrders } from '../../api'
+import { ManageHeadCell } from '../../domin/Headline'
+import { Manage } from '../../domin/Record'
 import { RecordContext } from '../../provider/RecordProvider'
+import TableList from '../common/tableList/tableList'
+import ManageTableEditList from './manageTableEditList'
 
 const headCells: ManageHeadCell[] = [
 	{
@@ -69,6 +68,10 @@ const ManagePage: React.FC = () => {
 		setSearch(search)
 	}
 
+	const resetSeleted = () => {
+		setSelected([])
+	}
+
 	const handleClickOpen = () => {
 		setOpen(true)
 	}
@@ -112,15 +115,14 @@ const ManagePage: React.FC = () => {
 									<EditCalendarIcon onClick={() => handleClickOpen()} />
 								</IconButton>
 							</Tooltip>
-							<ManageTableEditList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
+							<ManageTableEditList
+								open={open}
+								handleClose={handleClose}
+								resetSeleted={resetSeleted}
+								selectedItem={selectedItem[0]}
+							/>
 						</>
 					)}
-
-					<Tooltip title='删除'>
-						<IconButton>
-							<DeleteIcon />
-						</IconButton>
-					</Tooltip>
 				</Stack>
 			)}
 		</TableList>

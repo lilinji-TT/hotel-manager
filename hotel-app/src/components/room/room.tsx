@@ -1,20 +1,20 @@
-import { RoomHeadCell } from '../../domin/Headline'
-import TableList from '../common/tableList/tableList'
-import { Room } from '../../domin/Room'
-import { useContext, useEffect, useMemo, useState } from 'react'
-import Tooltip from '@mui/material/Tooltip/Tooltip'
-import IconButton from '@mui/material/IconButton'
+import AddBusinessIcon from '@mui/icons-material/AddBusiness'
+import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import BedroomParentOutlinedIcon from '@mui/icons-material/BedroomParentOutlined'
-import AddBusinessIcon from '@mui/icons-material/AddBusiness'
+import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack/Stack'
-import { UserContext } from '../../provider/UserProvider'
+import Tooltip from '@mui/material/Tooltip/Tooltip'
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { deleteRoom, getRoomList } from '../../api'
+import { RoomHeadCell } from '../../domin/Headline'
+import { Room } from '../../domin/Room'
 import { Role } from '../../domin/User'
+import { RoomContext } from '../../provider/RoomProvider'
+import { UserContext } from '../../provider/UserProvider'
+import TableList from '../common/tableList/tableList'
 import RoomTableEditList from './roomTableEditList'
 import RoomTableRentList from './roomTableRentList'
-import { RoomContext } from '../../provider/RoomProvider'
-import { getRoomList } from '../../api'
 const headCells: RoomHeadCell[] = [
 	{
 		id: 'number',
@@ -55,6 +55,9 @@ const RoomPage: React.FC = () => {
 		setOpen(false)
 	}
 
+	const resetSeleted = () => {
+		setSelected([])
+	}
 	const handleSelectChange = (selectValue: string[]) => {
 		setSelected(selectValue)
 	}
@@ -66,6 +69,12 @@ const RoomPage: React.FC = () => {
 	const selectedItem = useMemo(() => {
 		return roomState.filter((item) => item._id === selected[0])
 	}, [roomState, selected])
+
+	const handleDelete = async (id: string) => {
+		await deleteRoom(id)
+		await fetchData()
+		setSelected([])
+	}
 
 	const fetchData = async () => {
 		const {
@@ -92,14 +101,24 @@ const RoomPage: React.FC = () => {
 				handleSelectChange={handleSelectChange}
 				handleSearchChange={handleSearchChange}
 			>
-				<RoomTableEditList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
+				<RoomTableEditList
+					open={open}
+					handleClose={handleClose}
+					selectedItem={selectedItem[0]}
+					resetSeleted={resetSeleted}
+				/>
 				{selected.length > 0 && (
 					<Stack spacing={1} direction='row'>
 						{selected.length === 1 && userState.role === Role.ADMIN && (
 							<>
 								<Tooltip title='修改'>
-									<IconButton>
+									<IconButton onClick={() => handleClickOpen()}>
 										<ModeEditIcon />
+									</IconButton>
+								</Tooltip>
+								<Tooltip title='删除'>
+									<IconButton onClick={() => handleDelete(selectedItem[0]._id)}>
+										<DeleteIcon />
 									</IconButton>
 								</Tooltip>
 							</>
@@ -111,14 +130,14 @@ const RoomPage: React.FC = () => {
 										<BedroomParentOutlinedIcon />
 									</IconButton>
 								</Tooltip>
-								<RoomTableRentList open={open} handleClose={handleClose} selectedItem={selectedItem[0]} />
+								<RoomTableRentList
+									open={open}
+									handleClose={handleClose}
+									selectedItem={selectedItem[0]}
+									resetSeleted={resetSeleted}
+								/>
 							</>
 						)}
-						<Tooltip title='删除'>
-							<IconButton>
-								<DeleteIcon />
-							</IconButton>
-						</Tooltip>
 					</Stack>
 				)}
 				{selected.length === 0 && userState.role === Role.ADMIN && (

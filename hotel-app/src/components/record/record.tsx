@@ -1,9 +1,10 @@
-import { RecordHeadCell } from '../../domin/Headline'
-import TableList from '../common/tableList/tableList'
-import { Record } from '../../domin/Record'
 import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getHistoryOrders } from '../../api'
+import { RecordHeadCell } from '../../domin/Headline'
+import { Record } from '../../domin/Record'
 import { RecordContext } from '../../provider/RecordProvider'
+import TableList from '../common/tableList/tableList'
 
 const headCells: RecordHeadCell[] = [
 	{
@@ -70,6 +71,7 @@ const headCells: RecordHeadCell[] = [
 const RecordPage: React.FC = () => {
 	const [selected, setSelected] = useState<string[]>([])
 	const { recordState, recordDispatch } = useContext(RecordContext)
+	const navigate = useNavigate()
 	const handleSelectChange = (selectValue: string[]) => {
 		setSelected(selectValue)
 	}
@@ -85,6 +87,7 @@ const RecordPage: React.FC = () => {
 		} = await getHistoryOrders()
 
 		recordDispatch({ type: 'SET_HISTORY_RECORD_LIST', payload: data })
+		navigate('/record')
 	}
 
 	useEffect(() => {
